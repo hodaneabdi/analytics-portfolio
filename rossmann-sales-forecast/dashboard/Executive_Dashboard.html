@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daily Store Sales — Rossmann · Agnes &amp; Co. Retail Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:58px}
+.lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+/* brand bar */
+nav{position:sticky;top:0;z-index:20;background:rgba(247,246,244,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav a:hover,nav a:focus-visible{color:var(--red);border-bottom-color:var(--red)}
+header.mast{padding:60px 0 0}
+.rule{width:52px;height:3px;background:var(--red);margin-bottom:22px}
+h1 em{font-style:normal;color:var(--red)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.split3{display:grid;grid-template-columns:1.1fr 1fr;gap:20px}
+@media(max-width:860px){.split,.split3{grid-template-columns:1fr}}
+.step{counter-increment:s;position:relative;padding-left:38px}
+.step::before{content:counter(s);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;font-family:var(--mono);font-size:11.5px;display:flex;align-items:center;justify-content:center}
+.step p{margin:0;font-size:13.5px;color:var(--slate);line-height:1.5}
+.lever:last-child{border-bottom:none}
+.fill.b2{background:var(--r3)}
+.fill.b3{background:var(--r2)}
+.fill.b4{background:var(--r1)}
+.ctl .hint{font-size:12px;color:var(--mute);line-height:1.45}
+select:focus-visible,a:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.result{background:var(--char);color:#f0ecea;border-radius:2px;padding:24px}
+.result .big{font-size:clamp(36px,5.6vw,56px);letter-spacing:-.04em;line-height:1;color:#fff;font-weight:700}
+.result .cap{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#a09a96}
+.result hr{border:none;border-top:1px solid rgba(255,255,255,.15);margin:18px 0}
+.rrow{display:flex;justify-content:space-between;padding:5px 0;font-size:14px}
+.rrow span:last-child{font-family:var(--mono);font-weight:500}
+.verdict{margin-top:16px;padding:13px 15px;border-radius:2px;font-size:13.5px;line-height:1.5}
+.v-go{background:rgba(255,255,255,.11)}
+.v-no{background:rgba(200,16,46,.34)}
+table.mx th.rh{text-align:left}
+table.mx td.rh b{color:var(--ink);font-weight:600}
+.c0{background:var(--r0);color:var(--slate)}
+.c1{background:var(--r1);color:#5e0a17}
+.c2{background:var(--r2);color:#40060f}
+.c3{background:var(--r3);color:#fff}
+.c4{background:var(--r4);color:#fff}
+.cb{background:var(--char);color:#fff}
+.sel{outline:2.5px solid var(--char);outline-offset:-2.5px}
+.pill{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;padding:2px 7px;border-radius:2px}
+.p-top{background:var(--red-l);color:var(--red-d)}
+.p-bot{background:#efeceb;color:var(--char)}
+.story.alt{background:#efedea}
+.story.alt .tagline{color:var(--char)}
+.story p:last-child{margin-bottom:0}
+.story.alt .eg{border-left-color:var(--char)}
+.acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.act dd b{font-family:var(--mono);font-weight:500}
+.bar{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;margin-bottom:22px}
+.ctl{display:flex;flex-direction:column;gap:6px;margin-bottom:15px}
+.ctl label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--slate)}
+select,input[type=number]{font-family:var(--body);font-size:14.5px;padding:9px 11px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:2px}
+select{font-family:var(--body);font-size:14.5px;padding:9px 11px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:2px;width:100%;min-width:190px}
+input[type=number]{width:92px;font-family:var(--mono)}
+select:focus-visible,input:focus-visible,button:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+button{font-family:var(--body);font-size:13.5px;font-weight:500;padding:9px 16px;border-radius:2px;border:1px solid var(--char);background:var(--char);color:#fff;cursor:pointer}
+button.ghost{background:transparent;color:var(--char)}
+button:hover{opacity:.87}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal .dh{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--slate);text-align:center;padding-bottom:4px}
+.day{border:1px solid var(--line);border-radius:2px;padding:7px 8px 8px;min-height:74px;background:#fff;position:relative;text-align:left;font:inherit;cursor:default;display:block;width:100%}
+.day .dn{font-family:var(--mono);font-size:11px;color:var(--mute)}
+.day .sv{font-family:var(--mono);font-size:12.5px;margin-top:6px;font-weight:500}
+.day .inc{font-family:var(--mono);font-size:10.5px;color:var(--red-d);margin-top:2px}
+.day.sel{cursor:pointer}
+.day.sel:hover{border-color:var(--red);box-shadow:0 0 0 1px var(--red)}
+.day.on{background:var(--red);border-color:var(--red)}
+.day.on .dn{color:rgba(255,255,255,.72)}
+.day.on .sv{color:#fff}
+.day.on .inc{color:#fbd4da}
+.day.closed{background:#f1eeea;border-style:dashed;color:var(--mute)}
+.day.closed .sv{color:var(--mute);font-size:10.5px}
+.day.empty{border:none;background:transparent;min-height:0}
+.day .flag{position:absolute;top:6px;right:7px;font-family:var(--mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.day.on .flag{color:rgba(255,255,255,.7)}
+.stat{padding:14px 0;border-bottom:1px solid var(--line)}
+.stat:last-child{border-bottom:none}
+.stat .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--slate)}
+.stat .v{font-size:25px;font-weight:600;letter-spacing:-.03em;margin-top:3px;font-variant-numeric:tabular-nums}
+.stat .s{font-size:12.5px;color:var(--mute);margin-top:1px}
+.stat.hero{background:var(--char);color:#fff;margin:-24px -24px 0;padding:20px 24px;border-radius:2px 2px 0 0}
+.stat.hero .k{color:#a09a96}
+.stat.hero .v{font-size:34px;color:#fff}
+.stat.hero .s{color:#a09a96}
+.budgetbar{height:6px;background:#eae6e1;border-radius:3px;overflow:hidden;margin-top:8px}
+.budgetbar div{height:100%;background:var(--red)}
+.budgetbar div.over{background:var(--char)}
+table.tbl td.n,table.tbl th.n{font-family:var(--mono);text-align:right;padding-right:0}
+table.tbl tr:last-child td{border-bottom:none}
+@media print{body{background:#fff}}
+/* ============ TYPOGRAPHIC SYSTEM ============ */
+:root{--paper:#f7f6f4;--ink:#171514;--slate:#5d5855;--mute:#918b87;--line:#e2ded9;--panel:#fff;--char:#241f1d;--red:#c8102e;--red-d:#8e0b20;--red-l:#fceaed;--red-m:#e8536a;--r0:#f4f1ee;--r1:#f6ccd4;--r2:#e88a9a;--r3:#d1425b;--r4:#8e0b20;--body:'Inter','Helvetica Neue',Arial,sans-serif;--mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;--text:'Newsreader',Georgia,'Times New Roman',serif;--ui:'IBM Plex Sans',system-ui,sans-serif;--num:'IBM Plex Mono',ui-monospace,monospace;--measure:70ch}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;font-optical-sizing:auto}
+.wrap{max-width:1080px;margin:0 auto;padding:0 26px 90px}
+h1,h2,h3,h4{margin:0;letter-spacing:-.005em;font-weight:400;font-family:var(--text)}
+h1{font-size:clamp(31px,4.4vw,46px);line-height:1.14;max-width:22ch;margin-bottom:20px;letter-spacing:-.032em;font-weight:400}
+h2{font-size:clamp(21px,2.5vw,27px);line-height:1.24}
+.dek,.stand{font-family:var(--text);max-width:var(--measure)}
+.stand{font-size:19px;color:var(--slate);max-width:62ch;margin:0;line-height:1.55}
+.dek{color:var(--slate);max-width:72ch;margin:6px 0 26px;font-size:16.5px}
+p{max-width:var(--measure)}
+/* interface + figures */
+.lbl,.eyebrow,.key,nav a,nav .c,.engage,
+select,button,input,.act .lead,.act dd,.step p,.cell p,.story p,.note,
+.hint,.gl p,.day .sv,.day .inc{font-family:var(--ui)}
+.note,.hint,.act .lead,.cell p{font-size:14px;line-height:1.6}
+.stat .v,.kpi .val,.result .big,.lever .vv,table.mx td,table.tbl td.n,
+.day .sv,.day .inc,.rrow span:last-child,.budgetbar{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.stat .v,.result .big{font-family:var(--text);font-weight:500}
+.lever .nm small{display:block;font-weight:400;font-size:12px;color:var(--mute);letter-spacing:0;font-family:var(--ui)}
+/* section rhythm: a single rule system, reused */
+section{padding-top:clamp(56px,8vw,92px)}
+/* ============ WORDMARK: rule-anchored ============ */
+/* ============ RUNNING HEADER ============ */
+nav .inner{max-width:1080px;margin:0 auto;padding:10px 26px;display:flex;gap:22px;flex-wrap:nowrap;align-items:center;overflow-x:auto;scrollbar-width:none}
+nav .inner::-webkit-scrollbar{display:none}
+nav a{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);text-decoration:none;border-bottom:1.5px solid transparent;padding:2px 0;white-space:nowrap}
+nav .c{font-size:15px;font-family:var(--text);letter-spacing:0;text-transform:none;color:var(--ink);margin-right:auto}
+#now{font-family:var(--num);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin-left:auto;white-space:nowrap;padding-left:24px}
+@media(max-width:880px){#now{display:none}}
+/* ============ PLANNER AS A DISTINCT BAND ============ */
+#planner{position:relative;padding-top:0;margin-top:clamp(56px,8vw,92px)}
+.band{background:var(--char);color:#eeebe8;margin:0 calc(50% - 50vw);padding:clamp(44px,6vw,72px) calc(50vw - 540px + 26px);border-top:3px solid var(--red);border-bottom:3px solid var(--red)}
+@media(max-width:1132px){.band{padding-left:26px;padding-right:26px}}
+.band h2,.band h3{color:#fff}
+.band .dek,.band p{color:#b6b0ac}
+.band .shead .n{color:var(--red)}
+.band .note b{color:#fff}
+.band .ctl label{color:#a09a96}
+.band select,.band input{background:#3a3431;border-color:#4d4643;color:#f2efec}
+.band button{background:var(--red);border-color:var(--red)}
+.band button.ghost{background:transparent;border-color:#5b5451;color:#d6d1cd}
+.band table.tbl td{border-bottom-color:#3a3431;color:#e2ddd9}
+.band .stat{border-bottom-color:#403936}
+.band .stat .k{color:#8f8985}
+.band .stat .v{color:#fff}
+.band .stat .s{color:#8f8985}
+.band .stat.hero{background:var(--red);border-radius:2px}
+.band .stat.hero .k,.band .stat.hero .s{color:#f6ccd3}
+.band .day{background:#3a3431;border-color:#4d4643;color:#e2ddd9}
+.band .day .dn{color:#938d89}
+.band .day.closed{background:#2b2624;border-color:#3d3734;color:#7d7773}
+.band .day.on{background:var(--red);border-color:var(--red)}
+.band .day.empty{background:transparent;border:none}
+.band .day.sel:hover{border-color:#fff;box-shadow:0 0 0 1px #fff}
+.band .budgetbar{background:#403936}
+.band .result{background:#3a3431}
+.band .callout{border-left-color:var(--red)}
+.band .callout p{color:#e2ddd9}
+.band .cal .dh{color:#8f8985}
+.band .verdict.v-go{background:rgba(255,255,255,.09)}
+.band #ctx span,.band #p-chips span{background:#3a3431!important;color:#e2ddd9}
+.band #ctx span span,.band #p-chips span span{color:#938d89!important}
+/* ============ MISC POLISH ============ */
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:26px}
+.step h4{margin-bottom:4px;font-size:16px}
+@media print{nav{display:none}.band{background:#fff;color:#000;margin:0;border-color:#999}
+  .band h2,.band h3{color:#000}.band .dek,.band p{color:#333}}
+/* model at a glance */
+.atglance .k{display:block;font-family:var(--num);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--red);margin-bottom:5px}
+/* executive summary */
+.summary .shead .n{color:var(--red);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.find{display:grid;grid-template-columns:52px 1fr;gap:0 20px;padding:30px 0;border-top:1px solid var(--line)}
+.fnum{font-family:var(--num);font-size:12px;color:var(--red);padding-top:9px;letter-spacing:.06em}
+.fbody h3{font-family:var(--text);font-weight:500;font-size:22px;line-height:1.24;margin:0 0 18px;max-width:36ch}
+.fbody p:last-child{margin-bottom:0}
+.fbody .fev,.fbody .fim{color:var(--slate)}
+@media(max-width:640px){.find{grid-template-columns:1fr}.fnum{padding-top:0;margin-bottom:6px}
+  .fbody .k{display:block;margin-bottom:2px}}
+.ask{margin-top:30px;border-top:2px solid var(--ink);padding-top:22px;display:grid;grid-template-columns:92px 1fr;gap:0 18px;align-items:baseline}
+.ask .k{font-family:var(--num);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--red);padding-top:.35em}
+.ask p{font-family:var(--ui);font-size:15px;line-height:1.6;margin:0;max-width:66ch}
+@media(max-width:640px){.ask{grid-template-columns:1fr;gap:6px}}
+/* anticipated questions */
+.qa{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:2px;overflow:hidden}
+/* appendix */
+#appendix{border-top:2px solid var(--ink);margin-top:clamp(60px,8vw,90px)}
+#appendix .shead .n,#method .shead .n,#what .shead .n,#limits .shead .n{color:var(--mute)}
+#appendix ~ section h2{font-size:22px}
+/* ============ MASTHEAD ============ */
+.topline{height:3px;background:var(--red)}
+.brandbar{background:var(--char);color:#fff}
+.brandbar .inner{max-width:1080px;margin:0 auto;padding:30px 26px 0}
+.idrow{display:flex;align-items:flex-end;gap:32px;flex-wrap:wrap;padding-bottom:26px}
+.logo{display:inline-flex;flex-direction:column;text-decoration:none;color:inherit;line-height:1}
+.logo .wm{font-family:var(--text);font-weight:400;font-size:30px;letter-spacing:.005em;color:#fff;display:block;white-space:nowrap}
+.logo .wm i{font-style:italic;color:var(--red);font-size:1.06em;padding:0 .02em}
+.logo .wmsub{display:block;margin-top:11px;font-family:var(--num);font-size:8.5px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:#8f8985;text-indent:.42em}
+.client{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.client .pf{font-family:var(--num);font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;color:#7d7773}
+.client img{height:23px;display:block;filter:brightness(0) invert(1);opacity:.94}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:0 28px;margin:0;border-top:1px solid rgba(255,255,255,.14);padding:15px 0 18px}
+.meta > div{min-width:0}
+.meta dt{font-family:var(--num);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:#6f6a67;margin-bottom:5px}
+.meta dd{font-family:var(--ui);font-size:12.5px;line-height:1.4;color:#c2bcb8;margin:0}
+@media(max-width:820px){.meta{grid-template-columns:repeat(2,1fr);gap:16px 24px}}
+@media(max-width:520px){.idrow{gap:20px}.client{margin-left:0;align-items:flex-start}
+  .meta{grid-template-columns:1fr}}
+/* colophon mark matches the masthead */
+.colophon .cwm{font-family:var(--text);font-size:21px;color:var(--ink);line-height:1;text-transform:none;letter-spacing:.005em}
+.colophon .cwm i{font-style:italic;color:var(--red)}
+/* summary finding rows: aligned label column */
+.fbody p{font-family:var(--ui);font-size:14px;line-height:1.6;margin:0;max-width:68ch;display:grid;grid-template-columns:92px 1fr;gap:0 18px;align-items:baseline;padding:11px 0;border-top:1px solid var(--line)}
+.fbody p:first-of-type{border-top:none;padding-top:4px}
+.fbody .k{font-family:var(--num);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--mute);display:inline-block;min-width:0;padding-top:.35em}
+.fbody .t{font-family:var(--ui);font-size:14px;line-height:1.6}
+.fbody .fev .t,.fbody .fim .t{color:var(--slate)}
+.fbody .fac{color:var(--ink);border-top:1px solid var(--ink);padding-bottom:2px}
+.fbody .fac .k{color:var(--red)}
+.fbody .fac .t{color:var(--ink);font-weight:500}
+@media(max-width:640px){.fbody p{grid-template-columns:1fr;gap:4px}
+  .fbody .k{padding-top:0}}
+/* ══════════════ REFINEMENT LAYER ══════════════ */
+/* --- section rhythm: every section head carries the same rule --- */
+.shead{display:block;align-items:baseline;gap:15px;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:13px}
+.shead .n{font-family:var(--mono);font-size:14px;color:var(--red);letter-spacing:.04em;font-weight:500;display:block;margin-bottom:9px}
+.shead h2{max-width:26ch}
+section > .dek{margin-bottom:32px}
+h3{font-size:20px;font-weight:500;letter-spacing:-.008em;line-height:1.3}
+h4{font-size:16.5px;font-weight:500;letter-spacing:-.005em;line-height:1.32}
+/* --- surfaces: hairline, generous, unfussy --- */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:2px;border-color:var(--line);box-shadow:0 1px 0 rgba(23,21,20,.02)}
+.pad{padding:26px}
+.cols3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.cell{background:var(--panel);padding:24px}
+.cell h4{margin-top:9px}
+.cell p{max-width:38ch}
+.cell .lbl{font-size:9px;letter-spacing:.15em}
+/* --- data tables --- */
+table.tbl{width:100%;border-collapse:collapse;font-size:14px}
+table.tbl th{text-align:left;font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--slate);font-weight:400;padding:0 10px 9px 0;border-bottom:1px solid var(--ink);padding-bottom:11px}
+table.tbl td{padding:11px 12px 11px 0;border-bottom:1px solid var(--line);vertical-align:baseline}
+table.tbl tbody tr:hover td{background:rgba(200,16,46,.028)}
+table.tbl td.n{font-size:13.5px;letter-spacing:-.01em}
+table.tbl td:first-child{font-family:var(--text);font-size:15.5px;padding-right:18px}
+/* --- response matrix --- */
+table.mx{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px}
+table.mx th{font-weight:400;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--slate);padding:0 0 8px;text-align:center;padding-bottom:10px}
+table.mx td{text-align:center;padding:12px 0;border:2px solid var(--paper);font-family:var(--num);font-size:13px;letter-spacing:-.01em}
+table.mx td.rh{text-align:left;font-family:var(--text);font-size:15px;color:var(--slate);border:none;padding-right:14px;white-space:nowrap;padding:0 18px 0 0;line-height:1.35}
+.key{display:flex;flex-wrap:wrap;gap:18px;margin-top:16px;font-family:var(--mono);font-size:10px;color:var(--mute);letter-spacing:.09em;text-transform:uppercase}
+.key i{display:inline-block;width:11px;height:11px;margin-right:5px;vertical-align:-1px;font-style:normal;border-radius:1px}
+/* --- lever bars --- */
+.lever{display:grid;grid-template-columns:132px 1fr 84px;align-items:center;gap:16px;padding:15px 0;border-bottom:1px solid var(--line)}
+.track{height:24px;background:#efece7;border-radius:1px;overflow:hidden}
+.fill{height:100%;background:var(--red);border-radius:0 1px 1px 0}
+.lever .vv{font-family:var(--mono);font-size:17px;text-align:right;font-weight:500;letter-spacing:-.02em}
+.lever .nm{font-weight:500;font-size:17.5px;font-family:var(--text)}
+/* --- emphasis blocks: exactly two treatments --- */
+.callout{border-left:2px solid var(--red);padding:2px 0 2px 22px;margin:28px 0 0;border-left-width:2px}
+.callout p{margin:0;font-size:16.5px;max-width:64ch;line-height:1.55}
+.note{background:#f0ede9;border-radius:2px;padding:18px 20px;font-size:13.5px;line-height:1.62;margin-top:18px;max-width:none}
+.note b{color:var(--ink)}
+/* --- narrative panels --- */
+.story{background:var(--red-l);border-radius:2px;padding:26px 28px}
+.story h3{margin-bottom:11px;font-size:19px}
+.story p{margin:0 0 11px;font-size:13.5px;max-width:60ch;font-family:var(--ui);line-height:1.62}
+.story .eg{background:#fff;border-left:2px solid var(--red);padding:13px 16px;font-size:13.5px;margin:12px 0;font-style:italic;color:var(--slate);border-left-width:2px;line-height:1.55;border-radius:0 2px 2px 0}
+.story .tagline{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--red-d);margin-bottom:8px}
+/* --- decision cards --- */
+.act{background:var(--panel);padding:26px}
+.act .n{font-family:var(--mono);font-size:11px;color:var(--red);letter-spacing:.14em}
+.act h3{font-size:18px;margin:11px 0 9px;line-height:1.26;font-weight:500;max-width:24ch}
+.act .lead{font-size:13.5px;color:var(--slate);margin:0 0 14px;line-height:1.58;margin-bottom:18px;max-width:34ch}
+.act dl{margin:0;font-size:12.5px;display:grid;grid-template-columns:auto 1fr;gap:8px 14px;padding-top:15px;border-top:1px solid var(--line)}
+.act dt{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);padding-top:.3em}
+.act dd{margin:0;font-size:13px;line-height:1.45}
+/* --- anticipated questions --- */
+.qa > div{background:var(--panel);padding:26px}
+.qa h4{font-family:var(--text);font-weight:500;font-size:18px;margin:0 0 9px;margin-bottom:11px;max-width:26ch}
+.qa p{font-family:var(--ui);font-size:13.5px;line-height:1.65;color:var(--slate);margin:0;max-width:none}
+/* --- appendix: quieter register --- */
+#appendix .shead{border-bottom-color:var(--ink)}
+#what h2,#limits h2,#method h2{font-size:21px}
+.atglance{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1px;background:var(--line);border-top:none;border-bottom:1px solid var(--line);margin-top:0;border:1px solid var(--line)}
+.atglance > div{background:var(--panel);padding:18px 20px}
+.atglance .v{display:block;font-family:var(--ui);font-size:13.5px;line-height:1.55;color:var(--slate);max-width:42ch}
+/* --- footer --- */
+footer{margin-top:80px;padding-top:34px;border-top:2px solid var(--char);font-size:13px;color:var(--slate)}
+footer .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:36px}
+footer h4{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin:0 0 10px;font-weight:500;margin-bottom:12px}
+footer p{margin:0 0 10px;max-width:54ch;line-height:1.62;font-size:13px}
+.colophon{margin-top:40px;padding-top:24px;border-top:1px solid var(--line);display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--mute)}
+/* --- interaction --- */
+a,button,select,input,.day.sel{transition:none}
+@media(prefers-reduced-motion:no-preference){
+  a,button{transition:color .12s ease,border-color .12s ease,opacity .12s ease}
+  .day.sel{transition:background .12s ease,border-color .12s ease}
+}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+/* --- numerals everywhere --- */
+.vv,.stat .v,.result .big,.fnum,.shead .n,table.mx td,table.tbl td.n,.atglance .v,
+.act dd b,.day .sv,.day .inc,.meta dd{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+/* --- print --- */
+@media print{
+  body{background:#fff;font-size:11pt}
+  nav,.topline{display:none}
+  .brandbar{background:#fff;color:#000;border-bottom:2px solid #000}
+  .logo .wm,.client .pf,.meta dd{color:#000}
+  .client img{filter:none}
+  .meta dt{color:#555}
+  section{page-break-inside:avoid}
+  .find,.act,.qa > div{page-break-inside:avoid}
+  .band{background:#fff;color:#000;margin:0;border-color:#999;padding:24px 0}
+  .band h2,.band h3,.band .stat .v{color:#000}
+  .band .dek,.band p,.band table.tbl td{color:#333}
+  .band .panel,.band .day{background:#fff;border-color:#bbb}
+}
+/* --- keep the refinement layer out of the dark band --- */
+.band .shead{border-bottom-color:rgba(255,255,255,.16)}
+.band table.tbl tbody tr:hover td{background:rgba(255,255,255,.05)}
+.band table.tbl th{color:#8f8985;border-bottom-color:rgba(255,255,255,.28)}
+.band .note{background:#332d2a;color:#c8c2be}
+.band .panel{background:#2e2926;border-color:#403936;box-shadow:none}
+/* --- word labels in section heads read smaller than numerals --- */
+#appendix .shead .n,#method .shead .n,#what .shead .n,#limits .shead .n,.summary .shead .n{font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:500}
+#what .shead .n,#limits .shead .n,#method .shead .n{display:none}
+#what .shead,#limits .shead,#method .shead{border-bottom-color:var(--line)}
+#what,#limits,#method{padding-top:clamp(38px,5vw,54px)}
+/* --- summary sits closer to the masthead, it is the lede --- */
+.summary{padding-top:clamp(34px,4vw,48px)}
+.summary .shead{border-bottom:2px solid var(--ink);padding-bottom:14px}
+.summary .shead h2{max-width:30ch}
+.find:first-of-type{border-top:none;padding-top:6px}
+/* --- the prize --- */
+.prize{border:1px solid var(--ink);border-radius:2px;padding:0;margin:0 0 34px;overflow:hidden}
+.phead{padding:22px 26px 18px;border-bottom:1px solid var(--line)}
+.phead .k{font-family:var(--num);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
+.phead p{font-family:var(--ui);font-size:13.5px;line-height:1.55;color:var(--slate);margin:7px 0 0;max-width:64ch}
+.pnote{font-family:var(--ui);font-size:13.5px;line-height:1.62;color:var(--slate);margin:0;padding:18px 26px 22px;border-top:1px solid var(--line);background:#f2efeb;max-width:none}
+.pnote b{color:var(--ink)}
+@media(max-width:620px){  .phead,}
+@media(max-width:680px){  }
+@media(max-width:480px){  }
+/* ══════════════ FINAL TYPOGRAPHIC POLISH ══════════════ */
+
+/* headings never leave a single word on the last line */
+h1,h2,h3,h4,.fbody h3,.act h3,.qa h4,.story h3,/* body copy avoids short widow lines */
+p,.dek,.stand,.fbody .t,.act .lead,.cell p,.qa p,.note,.pnote,
+/* anchors clear the sticky nav */
+section[id]{scroll-margin-top:64px}
+
+/* one radius throughout */
+.panel,.prize,.cols3,.qa,.acts,.atglance,.story,.note,.track,.result,.day,select,input,button,.pill,.gl{border-radius:2px}
+
+/* selection picks up the brand */
+::selection{background:var(--red);color:#fff}
+.band ::selection{background:#fff;color:var(--char)}
+
+/* dead flex leftovers on the section head */
+.shead{align-items:initial;gap:0}
+
+/* measure discipline: nothing runs wider than comfortable reading */
+.dek,.stand{max-width:70ch}
+.fbody .t,.qa p,.cell p,.act .lead{max-width:60ch}
+.pnote,.phead p{max-width:68ch}
+
+/* tabular figures in every numeric context, once and for all */
+.n,.vv,.v,.big,.sv,.inc,.fnum,.dn,.meta dd,.atglance .v,table.mx td:not(.rh){font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+/* hairline consistency: one weight, one colour */
+.acts,.cols3,.qa,.atglance{background:var(--line)}
+
+/* the band keeps its own rules */
+.band .panel,.band .day,.band .result{border-radius:2px}
+
+/* final vertical rhythm */
+section{padding-top:clamp(54px,7.5vw,86px)}
+.summary{padding-top:clamp(32px,4vw,46px)}
+#appendix{margin-top:clamp(64px,9vw,100px)}
+footer{margin-top:clamp(64px,9vw,96px)}
+
+/* small screens: keep the document readable rather than shrinking it */
+@media(max-width:620px){
+  body{font-size:16px}
+  .wrap{padding-left:20px;padding-right:20px}
+  h1{font-size:29px}
+  .stand{font-size:16.5px}
+  .pad{padding:20px}
+  .cell,.act,.qa > div{padding:20px}
+  .find{padding:24px 0}
+  .fbody h3{font-size:19px}
+}
+
+/* --- scenario rows --- */
+.ptab{border-top:1px solid var(--line)}
+.prow{display:grid;grid-template-columns:1fr 116px 74px 104px;gap:0 20px;
+  align-items:baseline;padding:17px 26px;border-bottom:1px solid var(--line)}
+.prow:last-child{border-bottom:none}
+.phdr{padding-top:13px;padding-bottom:11px;border-bottom:1px solid var(--ink)}
+.phdr span{font-family:var(--num);font-size:9px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--mute);white-space:nowrap}
+.ps b{display:block;font-family:var(--text);font-size:17px;font-weight:500;line-height:1.25;margin-bottom:6px}
+.ps .sd{display:block;font-family:var(--ui);font-size:13px;line-height:1.55;color:var(--slate);max-width:54ch}
+.prow .n{text-align:right;font-family:var(--num);font-size:14.5px;
+  font-variant-numeric:tabular-nums;letter-spacing:-.01em;white-space:nowrap}
+.prow.rec{background:var(--red-l);box-shadow:inset 3px 0 0 var(--red)}
+.prow.rec .ps b,.prow.rec .n{color:var(--red-d)}
+.prow.rec .sd{color:#7d4249}
+.prow.ceil .ps b,.prow.ceil .n,.prow.ceil .sd{color:var(--mute)}
+@media(max-width:720px){
+  .prow{grid-template-columns:1fr 96px 66px;padding-left:18px;padding-right:18px}
+  .prow > .n:last-child,.phdr > span:last-child{display:none}}
+@media(max-width:500px){
+  .prow{grid-template-columns:1fr 92px}
+  .prow > .n:nth-child(3),.phdr > span:nth-child(3){display:none}}
+
+.ref{font-family:var(--num);font-size:10.5px;letter-spacing:.06em;color:var(--red);white-space:nowrap}
+.barrow{display:grid;grid-template-columns:210px 1fr 62px;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--line)}
+.barrow:last-child{border-bottom:none}
+.barrow .nm{font-size:14px;color:var(--slate)}
+.barrow .vv{font-family:var(--num);font-size:14px;text-align:right;font-variant-numeric:tabular-nums}
+.bars .track{height:18px}
+@media(max-width:620px){.barrow{grid-template-columns:1fr 54px}.barrow .track{grid-column:1/-1;order:3}}
+
+/* ══════════ FINAL POLISH ══════════ */
+
+/* masthead: tighter, less vertical weight */
+header.mast{padding:52px 0 0}
+h1{font-size:clamp(26px,3.4vw,38px);line-height:1.15;max-width:26ch;margin-bottom:20px;letter-spacing:-.025em}
+.mast .rule{width:44px;height:3px;margin-bottom:20px}
+.mast .lbl{display:block;margin-bottom:14px}
+.stand{font-size:17.5px;line-height:1.58;max-width:64ch}
+.atglance{margin-top:38px}
+
+/* recommendation cards: the warrant reads as a footnote, not a spec */
+.act dl{grid-template-columns:1fr;gap:4px;margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
+.act dt{font-size:8.5px;letter-spacing:.16em;color:var(--red);padding-top:0}
+.act dd{font-size:12.5px;line-height:1.5;color:var(--slate)}
+.act dd b{color:var(--ink);font-family:var(--num);font-size:12.5px}
+.act{display:flex;flex-direction:column}
+.act .lead{margin-bottom:18px;max-width:38ch}
+.acts{grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+
+/* summary findings: give the number more presence */
+.fnum{font-size:13px;color:var(--red)}
+.fbody h3{font-size:21px;max-width:38ch;margin-bottom:16px}
+
+/* lever rows: a touch more air */
+.lever{padding:16px 0}
+.lever .nm small{margin-top:3px}
+
+/* bar comparisons read as data, not decoration */
+.bars .track{background:#f1eeea;border-radius:1px}
+.bars .fill{background:var(--red);border-radius:0 1px 1px 0}
+.barrow{padding:11px 0}
+
+/* cards: consistent internal rhythm */
+.cell h4{margin:9px 0 8px;max-width:24ch}
+.cell p{font-size:13.5px;line-height:1.6}
+
+/* the section reference should sit quietly */
+.ref{font-size:10px;letter-spacing:.08em;color:var(--red);opacity:.85}
+.dek .ref{white-space:nowrap}
+
+/* callouts carry the report's own conclusions — give them weight */
+.callout{border-left-width:2px;padding-left:24px;margin-top:30px}
+.callout p{font-size:16px;line-height:1.55}
+
+/* planner band: slightly calmer */
+.band .dek{max-width:70ch}
+
+@media(max-width:620px){
+  header.mast{padding-top:40px}
+  h1{font-size:27px}
+  .stand{font-size:16px}
+  .fbody h3{font-size:18.5px}
+  .barrow{grid-template-columns:1fr 54px}
+}
+
+/* orientation blocks read as scaffolding, not argument */
+.orient .shead{border-bottom:1px solid var(--line)}
+.orient .shead .n{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);font-weight:500}
+.orient h2{font-size:clamp(19px,2.2vw,23px)}
+#terms{padding-top:clamp(38px,5vw,54px)}
+#glossary{padding-top:clamp(50px,6vw,68px);border-top:1px solid var(--line);margin-top:clamp(40px,5vw,60px)}
+#glossary .panel{margin-top:0}
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.gl{background:var(--panel);padding:18px 20px}
+.gl .t{font-family:var(--text);font-weight:500;font-size:16px;margin-bottom:3px}
+.gl .d{font-family:var(--num);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--red);margin-bottom:8px}
+.gl p{margin:0;font-family:var(--ui);font-size:13px;line-height:1.55;color:var(--slate)}
+
+/* ══════════ LEFT-RAIL ALIGNMENT ══════════
+   Grid blocks were drawn as bordered cards, so their inner padding pushed
+   text off the prose margin. They are now ruled columns: content starts on
+   the same left edge as the body copy, separation comes from gaps and rules. */
+
+.atglance{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:0 34px;background:none;border:none;border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);margin-top:38px;padding:0}
+.atglance > div{background:none;padding:18px 0}
+.atglance .v{max-width:40ch}
+
+.cols3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:0 34px;background:none;border:none;border-top:1px solid var(--ink);border-radius:0}
+.cell{background:none;padding:20px 0 24px;border-bottom:1px solid var(--line)}
+.cell p{max-width:36ch}
+
+.acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:0 34px;background:none;border:none;border-top:1px solid var(--ink);border-radius:0}
+.act{background:none;padding:22px 0 24px;border-bottom:1px solid var(--line)}
+.act .lead{max-width:34ch}
+.act dl{border-top:1px solid var(--line)}
+
+.qa{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:0 34px;background:none;border:none;border-top:1px solid var(--ink);border-radius:0}
+.qa > div{background:none;padding:22px 0 24px;border-bottom:1px solid var(--line)}
+
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:0 34px;background:none;border:none;border-top:1px solid var(--line);border-radius:0}
+.gl{background:none;padding:18px 0 20px;border-bottom:1px solid var(--line)}
+
+/* panels that genuinely are boxes keep their padding, but their content
+   is inset content — the surrounding rules still start at the prose margin */
+.panel{border-left:none;border-right:none;border-radius:0;box-shadow:none}
+.pad{padding:24px 0}
+#glossary .panel{border:none;border-top:1px solid var(--line)}
+#glossary .panel .lbl{padding-top:20px}
+
+/* narrative panels stay as filled blocks, so they keep inner padding */
+.story{padding:24px 26px}
+.note{padding:18px 20px}
+.result{padding:24px}
+.band .panel{border:1px solid #403936;border-radius:2px}
+.band .pad{padding:24px}
+
+/* tables already sit on the prose margin — keep them there */
+table.tbl td:first-child,table.mx td.rh{padding-left:0}
+
+/* the dark planner band is a surface, not the page — restore its insets */
+.band .cols3,.band .acts,.band .qa{border-top-color:rgba(255,255,255,.28)}
+.band .cell,.band .act,.band .qa > div{border-bottom-color:rgba(255,255,255,.14)}
+.band .panel{border:1px solid #403936}
+.band .note{padding:18px 20px}
+.band .stat.hero{margin:-24px -24px 0;padding:20px 24px}
+
+/* section heads and callouts sit flush with the text column */
+.callout{margin-left:0}
+.prize,.ptab{border-left:none;border-right:none}
+
+/* bar rows start at the margin */
+.barrow{padding-left:0}
+.bars{border-top:1px solid var(--line);margin-top:4px}
+
+/* lever rows too */
+.lever{padding-left:0}
+
+/* keep a comfortable gap where two columns meet */
+@media(max-width:860px){
+  .atglance,.cols3,.acts,.qa,.gloss{gap:0}
+}
+
+/* ══════════ MASTHEAD: fill the measure ══════════ */
+.mastrow{display:grid;grid-template-columns:1.15fr 1fr;gap:0 48px;align-items:start;margin-top:4px}
+.masthead-l h1{max-width:none;margin-bottom:0}
+.masthead-r .stand{max-width:none;margin-top:6px;font-size:16.5px;line-height:1.62}
+@media(max-width:860px){
+  .mastrow{grid-template-columns:1fr;gap:22px}
+  .masthead-r .stand{font-size:16px}
+}
+
+/* section intros run closer to the full column so they do not float in space */
+.dek{max-width:82ch}
+section > .dek{max-width:84ch}
+
+/* ══════════ LEVER ROWS ══════════ */
+.lever{grid-template-columns:200px 1fr 76px;gap:0 22px;padding:14px 0;align-items:center}
+.lever .nm{font-size:16px;line-height:1.25}
+.lever .nm small{font-size:11.5px;line-height:1.4;margin-top:4px;display:block;max-width:24ch}
+.lever .track{height:20px}
+.lever .vv{font-size:16px}
+@media(max-width:680px){
+  .lever{grid-template-columns:1fr 64px;gap:6px 16px}
+  .lever .track{grid-column:1/-1;order:3}
+}
+
+/* ══════════ BAR ROWS ══════════ */
+.barrow{grid-template-columns:170px 1fr 58px;gap:0 20px;padding:10px 0}
+.barrow .nm{font-size:14.5px}
+.bars .track{height:16px}
+
+/* ══════════ SUMMARY FINDINGS: fill the column ══════════ */
+.find{grid-template-columns:44px 1fr;gap:0 20px}
+.fbody h3{max-width:none;font-size:22px;line-height:1.24}
+.fbody p{max-width:none;grid-template-columns:96px 1fr}
+.fbody .t{max-width:78ch}
+
+/* ══════════ SIDE-BY-SIDE PANELS: no boxes, ruled columns ══════════ */
+.split{gap:0 44px}
+.split > .panel{border:none;border-top:1px solid var(--ink);border-radius:0}
+.split > .panel > .lbl{padding-top:18px}
+.split3{gap:0 44px}
+
+/* narrative story blocks keep their fill, but sit flush */
+.story{padding:24px 26px}
+
+/* the two-up bar panels: give each its own rule and let bars fill */
+.bars{border-top:none;margin-top:14px}
+.barrow:first-child{border-top:1px solid var(--line)}
+
+/* callouts and notes span the text column, not a narrow measure */
+.callout p{max-width:80ch}
+.note{max-width:none}
+.pnote{max-width:none}
+
+/* cards: let copy use the column it has */
+.cell p{max-width:none}
+.act .lead{max-width:none}
+.qa p{max-width:none}
+.atglance .v{max-width:none}
+.gl p{max-width:none}
+
+/* ══════════ FIGURE SPACING ══════════ */
+
+/* panels sit on rules, not in boxes: content starts immediately under the top rule */
+.panel{border:none;border-top:1px solid var(--ink);border-radius:0;background:none;box-shadow:none}
+.panel .pad,.pad{padding:18px 0 0}
+.panel > .lbl:first-child,.pad > .lbl:first-child{margin-top:0}
+
+/* lever rows: wide enough label column, single-line descriptor, compact height */
+.lever{display:grid;grid-template-columns:210px 1fr 96px;align-items:center;
+  gap:0 24px;padding:14px 0;border-bottom:1px solid var(--line);border-top:none}
+.lever:last-of-type{border-bottom:none}
+.lever .nm{font-family:var(--text);font-weight:500;font-size:17px;line-height:1.25}
+.lever .nm small{display:block;font-family:var(--ui);font-size:12px;color:var(--mute);
+  line-height:1.35;margin-top:3px;font-weight:400}
+.lever .track{height:20px}
+.lever .vv{text-align:right;font-family:var(--num);font-size:17px;font-weight:500;
+  letter-spacing:-.02em;line-height:1.2}
+.lever .vv small{display:block;font-family:var(--num);font-size:10.5px;color:var(--mute);
+  letter-spacing:0;margin-top:3px;font-weight:400}
+@media(max-width:700px){
+  .lever{grid-template-columns:1fr 76px;gap:6px 16px}
+  .lever .track{grid-column:1/-1;order:3}
+}
+
+/* bar comparisons: tighter rows, rule above the first, none after the last */
+.bars{border-top:1px solid var(--line);margin-top:14px}
+.barrow{display:grid;grid-template-columns:160px 1fr 66px;align-items:center;
+  gap:0 20px;padding:10px 0;border-bottom:1px solid var(--line)}
+.barrow:last-child{border-bottom:none}
+.barrow .nm{font-family:var(--text);font-size:15.5px;color:var(--ink)}
+.barrow .track{height:16px}
+.barrow .vv{text-align:right;font-family:var(--num);font-size:14px}
+@media(max-width:640px){.barrow{grid-template-columns:1fr 60px}.barrow .track{grid-column:1/-1;order:3;margin-top:4px}}
+
+/* the caption under a figure label should sit close to it */
+.panel .lbl + p,.pad .lbl + p{margin-top:5px;margin-bottom:0;font-size:13px;
+  color:var(--mute);font-family:var(--ui);max-width:60ch}
+
+/* glossary: one continuous rule per row instead of ragged per-cell borders */
+.gloss{border-top:1px solid var(--line);border-bottom:none;gap:0 34px;row-gap:0}
+.gl{padding:16px 0 18px;border-bottom:1px solid var(--line)}
+.gl .t{font-size:15.5px;margin-bottom:4px}
+.gl .d{margin-bottom:6px}
+.gl p{max-width:34ch}
+#glossary .panel{border-top:none}
+#glossary .pad{padding:0}
+
+/* the two side-by-side figure panels need matching top rules and no trailing gap */
+.split > .panel{border-top:1px solid var(--ink)}
+.split > .panel .pad{padding-bottom:0}
+
+/* planner band keeps real panels */
+.band .panel{border:1px solid #403936;border-radius:2px;background:#2e2926}
+.band .pad{padding:24px}
+.band .panel > .lbl:first-child{margin-top:0}
+.band .stat{border-bottom:1px solid #403936}
+.band .stat:last-child{border-bottom:none}
+.band .stat.hero{margin:-24px -24px 0;padding:20px 24px;background:var(--red);border-radius:2px 2px 0 0}
+.band table.tbl th{border-bottom-color:rgba(255,255,255,.28)}
+.band table.tbl td{border-bottom-color:#3a3431}
+
+/* stop the last figure in a section adding trailing space */
+section > .panel:last-child .pad,section > .split:last-of-type .panel .pad{padding-bottom:0}
+.panel .note:last-child{margin-bottom:18px}
+
+/* ══════════ THREE-COLUMN DATA TABLES ══════════ */
+table.tbl{table-layout:fixed;width:100%}
+table.tbl th,table.tbl td{vertical-align:top}
+table.tbl th:first-child,table.tbl td:first-child{width:26%;padding-right:24px}
+table.tbl th.n,table.tbl td.n{width:16%;text-align:right;padding-right:28px;white-space:nowrap}
+table.tbl th:last-child,table.tbl td:last-child{width:58%;padding-right:0}
+table.tbl td:last-child{color:var(--slate);font-family:var(--ui);font-size:13.5px;line-height:1.55}
+table.tbl td:first-child{font-family:var(--text);font-size:15.5px;color:var(--ink);line-height:1.35}
+table.tbl td.n{font-family:var(--num);font-size:14px;color:var(--ink);line-height:1.5}
+table.tbl th{font-size:9px;letter-spacing:.14em;padding-bottom:12px;line-height:1.4}
+table.tbl td{padding-top:14px;padding-bottom:14px}
+
+/* the planner's own tables keep their original proportions */
+.band table.tbl{table-layout:auto}
+.band table.tbl th:first-child,.band table.tbl td:first-child,
+.band table.tbl th.n,.band table.tbl td.n,
+.band table.tbl th:last-child,.band table.tbl td:last-child{width:auto;padding-right:0}
+.band table.tbl td:last-child{color:#e2ddd9;font-family:var(--num)}
+.band table.tbl td:first-child{color:#e2ddd9;font-family:var(--ui);font-size:13.5px}
+
+/* three-up blocks: the black rule above is the divider — no trailing stubs */
+.cols3{border-top:1px solid var(--ink);border-bottom:none}
+.cell{border-bottom:none;padding:20px 0 4px}
+.band .cell{border-bottom:none}
+
+/* multi-row grids keep row rules, since those separate rows rather than dangle */
+.acts .act,.gloss .gl{border-bottom:1px solid var(--line)}
+</style>
+</head>
+<body>
+
+<div class="topline"></div>
+<header class="brandbar">
+  <div class="inner">
+    <div class="idrow">
+      <a class="logo" href="#" aria-label="Agnes and Co., retail analytics">
+        <span class="wm">Agnes <i>&amp;</i> Co.</span>
+            <span class="wmsub">Retail Analytics</span>
+      </a>
+      <div class="client">
+        <span class="pf">Prepared for</span>
+        <img src="data:image/png;base64,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" alt="Rossmann">
+      </div>
+    </div>
+    <dl class="meta">
+      <div><dt>Engagement</dt><dd>Daily store-sales forecasting</dd></div>
+      <div><dt>Deliverable</dt><dd>Executive dashboard</dd></div>
+      <div><dt>Model</dt><dd>All Business Interactions, OLS on LogSales</dd></div>
+      <div><dt>Basis</dt><dd>100 stores &middot; 42,400 store-days</dd></div>
+    </dl>
+  </div>
+</header>
+
+<nav><div class="inner">
+  <a href="#summary">Summary</a>
+  <a href="#stores">What matters</a>
+  <a href="#promotions">Promotions</a>
+  <a href="#other">Other factors</a>
+  <a href="#planning">Inventory &amp; staffing</a>
+  <a href="#planner">Forecast tool</a>
+  <a href="#limits">Limits</a>
+  <a href="#decide">What to do</a>
+<span id="now"></span></div></nav>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="rule"></div>
+  <span class="lbl">Rossmann &middot; 100 stores &middot; January 2014 to February 2015</span>
+  <div class="mastrow"><div class="masthead-l"><h1>Improving daily store-sales forecasts to support promotion, inventory and staffing decisions</h1></div><div class="masthead-r"><p class="stand">Sales for any store on any day can be forecast before that day begins, using only information already known: the calendar, the store itself, and the promotion schedule. This dashboard sets out what the forecast reveals, where promotions pay and where they do not, what the analysis could not establish, and what management should do differently. Every figure is drawn from <em>Rossmann Store Sales Forecast</em> with its source section marked.</p></div></div>
+
+  <div class="atglance">
+    <div><span class="k">Objective</span><span class="v">Evaluate whether information known before the sales day can improve daily store-sales forecasts and support promotion, inventory and staffing decisions</span></div>
+    <div><span class="k">Dependent variable</span><span class="v">LogSales, the natural log of daily turnover. Predictions are converted back to the Sales scale for operational interpretation</span></div>
+    <div><span class="k">Model</span><span class="v">All Business Interactions: OLS with store fixed effects, calendar and holiday controls, Promo2 and competition categories, and regular-promotion interactions. HC3 robust standard errors</span></div>
+    <div><span class="k">Sample</span><span class="v">100 stores, 42,400 store-days, January 2014 to February 2015. 31,249 training and 5,131 test observations after retaining open stores with positive sales</span></div>
+    <div><span class="k">Validation</span><span class="v">2014 for development, January&ndash;February 2015 as unseen chronological holdout. Training R&sup2; 0.8323, test R&sup2; 0.8293 on LogSales</span></div>
+    <div><span class="k">Test error</span><span class="v">RMSE 0.1851 and MAE 0.1331 on LogSales. 95% prediction intervals covered 95.30% of actual test observations</span></div>
+  </div>
+</header>
+
+<section id="summary" class="summary">
+  <div class="shead"><span class="n">Summary</span><h2>What the analysis found</h2></div>
+  <p class="dek">This project evaluated whether Rossmann could use information known before the sales day to improve daily store-sales forecasts and support promotion, inventory and staffing decisions. Every figure is drawn from the technical report with its source section marked; plain-English definitions are collected under <a href="#glossary" style="color:var(--red)">Terms</a> at the end.</p>
+
+  <div class="find">
+    <div class="fnum">01</div>
+    <div class="fbody">
+      <h3>Which store it is matters more than anything else we measured</h3>
+      <p class="fev"><span class="k">Evidence</span><span class="t">Giving every store its own baseline lifted forecast accuracy from 28% to 81% &mdash; a bigger gain than every other improvement in the project combined. <span class="ref">&sect;3.4, &sect;3.5.4</span></span></p>
+      <p class="fim"><span class="k">Implication</span><span class="t">Forecast every store separately rather than applying one network figure. The store effect is not itself something management can pull &mdash; it stands in for location quality, local traffic, store size, demographics, customer loyalty, availability and how well the store is run.</span></p>
+    </div>
+  </div>
+
+  <div class="find">
+    <div class="fnum">02</div>
+    <div class="fbody">
+      <h3>Day promotions work, but nowhere near equally</h3>
+      <p class="fev"><span class="k">Evidence</span><span class="t">A single-day promotion lifts sales by <b>78.7%</b> on a Monday but only <b>37.4%</b> by Friday. Lift also differs by store format, product range, school holidays and which programme plan a store is on. <span class="ref">&sect;3.5.4</span></span></p>
+      <p class="fim"><span class="k">Implication</span><span class="t">Stop planning promotions on one chain-wide lift assumption. Match promotional stock and staffing to the specific store and day.</span></p>
+    </div>
+  </div>
+
+  <div class="find">
+    <div class="fnum">03</div>
+    <div class="fbody">
+      <h3>Two findings that are easy to read the wrong way</h3>
+      <p class="fev"><span class="k">Evidence</span><span class="t">Sales look <b>2.8% lower</b> when the continuing promotion programme is running &mdash; but that comparison ignores which stores, which months and what else was on. Once those are accounted for, the programme does carry real forecasting value. Separately, distance to the nearest competitor turns out to predict nothing at all. <span class="ref">&sect;3.3.3, &sect;3.5.4</span></span></p>
+      <p class="fim"><span class="k">Implication</span><span class="t">Keep the continuing programme, but judge it plan by plan rather than as a whole. And do not conclude competition does not matter &mdash; only that distance on its own tells us nothing useful.</span></p>
+    </div>
+  </div>
+
+  <div class="find">
+    <div class="fnum">04</div>
+    <div class="fbody">
+      <h3>The forecast is good enough to run inventory and rosters on</h3>
+      <p class="fev"><span class="k">Evidence</span><span class="t">The model explains <b>83.2%</b> of daily sales variation in the period it was built on and <b>82.9%</b> on two months it had never seen &mdash; so it holds up on new data. Its planning ranges captured <b>95.3%</b> of what actually happened. <span class="ref">&sect;3.6.1, &sect;3.6.2</span></span></p>
+      <p class="fim"><span class="k">Implication</span><span class="t">Plan to the forecast as the central number and the range around it as the realistic spread, for both stock and staffing.</span></p>
+    </div>
+  </div>
+</section>
+
+
+<section id="terms" class="orient">
+  <div class="shead"><span class="n">Before going further</span><h2>The two kinds of promotion</h2></div>
+  <p class="dek">Rossmann runs two distinct promotional mechanics. They are frequently conflated in reporting, they behave differently in the analysis, and several of the findings below turn on the distinction. <span class="ref">&sect;2.2, &sect;3.2</span></p>
+
+  <div class="split">
+    <div class="story">
+      <div class="tagline">Mechanic one</div>
+      <h3>The day promotion</h3>
+      <p>A promotion a store runs on one specific trading day. It starts and ends with that day, and the store either runs one or it does not. This is the lever the promotional calendar controls.</p>
+      <p style="margin-top:12px;font-size:13px;color:var(--slate)">Recorded in the data as <b>Promo</b>.</p>
+    </div>
+    <div class="story alt">
+      <div class="tagline">Mechanic two</div>
+      <h3>The continuing programme</h3>
+      <p>A separate recurring programme a store signs up to and then stays in. New rounds launch on a fixed quarterly schedule, and stores sit on one of three cycles &mdash; <b>Plan A</b> relaunches in January, April, July and October; <b>Plan B</b> in February, May, August and November; <b>Plan C</b> in March, June, September and December.</p>
+      <p style="margin-top:12px;font-size:13px;color:var(--slate)">Recorded in the data as <b>Promo2</b>. Enrolment is a standing commitment, not a calendar decision.</p>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:22px"><b>Why the difference matters.</b> A store can run a day promotion whether or not it is enrolled in the continuing programme. The interesting question is what happens when both are live at once &mdash; and the analysis finds that the answer depends on which plan the store is on.</div>
+
+  </section>
+
+<section id="stores">
+  <div class="shead"><span class="n">01</span><h2>What matters most to daily sales</h2></div>
+  <p class="dek">The forecast was built up in three steps, so we can see exactly where the accuracy came from. Almost all of it came from one change. <span class="ref">&sect;3.4</span></p>
+  <div class="panel pad" style="margin-bottom:24px">
+    <div class="lbl" style="margin-bottom:12px">Forecast accuracy on unseen data, by build stage</div><div class="lever"><div class="nm">Business factors only<small>calendar, format, promotion</small></div><div class="track"><div class="fill b4" style="width:33%"></div></div><div class="vv">28%<small>test R&sup2; 0.2776</small></div></div><div class="lever"><div class="nm">Plus store baselines<small>a separate level for every store</small></div><div class="track"><div class="fill " style="width:97%"></div></div><div class="vv">81%<small>test R&sup2; 0.8091</small></div></div><div class="lever"><div class="nm">Plus promotion detail<small>how lift varies by day, format and range</small></div><div class="track"><div class="fill b2" style="width:100%"></div></div><div class="vv">83%<small>test R&sup2; 0.8293</small></div></div></div>
+  <div class="callout"><p>Knowing <b>which store</b> it is takes the forecast from 28% to 81% accurate. Everything we know about promotions, weekdays, formats, ranges, competition and the continuing programme together adds only <b>two further points</b>. <span class="ref">a gain of 0.5315 in test R&sup2;, &sect;3.5.4</span></p></div>
+  <div class="note"><b>Worth stating plainly.</b> The full model beats a simpler version &mdash; one using only promotion, weekday, format and range &mdash; by just <b>0.0012</b> of forecast accuracy. The extra detail on competition and the continuing programme earns its place for interpretation, not for prediction. <span class="ref">&sect;3.4</span></div>
+  <div class="note" style="margin-top:14px"><b>What this means in practice.</b> The store effect is a placeholder for things we do not currently measure &mdash; catchment, footfall, floor space, local incomes, availability, and how well the store is run. It cannot be managed directly. Two things follow: forecast each store separately, and start collecting the data that would explain what the store effect actually stands for.</div>
+</section>
+
+<section id="promotions">
+  <div class="shead"><span class="n">02</span><h2>Where day promotions work hardest</h2></div>
+  <p class="dek">Day promotions still drive sales once store, calendar and holiday differences are taken out. But how much they drive depends heavily on when they run and where &mdash; and the differences are large enough to be worth planning around. <span class="ref">&sect;3.3.2, &sect;3.5.4</span></p>
+
+  <div class="cols3" style="margin-bottom:24px">
+    <div class="cell"><div class="lbl" style="color:var(--red)">Raw comparison</div><h4 style="margin:8px 0 7px">32.1% higher on promotion days</h4><p style="margin:0;font-size:13.5px;color:var(--slate)">Stores average &euro;8,993 on a promotion day against &euro;6,806 otherwise. Before any adjustment, that gap already narrows from 50.0% on Monday to 21.0% on Friday.</p></div>
+    <div class="cell"><div class="lbl" style="color:var(--red)">Like for like</div><h4 style="margin:8px 0 7px">78.7% Monday, 37.4% Friday</h4><p style="margin:0;font-size:13.5px;color:var(--slate)">Comparing a store against itself on a comparable non-promotion day, the lift more than halves across the trading week.</p></div>
+    <div class="cell"><div class="lbl" style="color:var(--red)">Weekend</div><h4 style="margin:8px 0 7px">No weekend evidence</h4><p style="margin:0;font-size:13.5px;color:var(--slate)">Day promotions were never run on a Saturday or Sunday in this period, so we cannot say what one would return.</p></div>
+  </div>
+
+  <div class="split">
+    <div class="panel pad">
+      <div class="lbl" style="margin-bottom:4px">Sales lift by weekday</div>
+      <p style="font-size:13px;color:var(--mute);margin:0 0 16px;font-family:var(--ui)">Table 6 of the technical report.</p>
+      <div class="bars">
+        <div class="barrow"><span class="nm">Monday</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="vv">78.7%</span></div>
+        <div class="barrow"><span class="nm">Tuesday</span><div class="track"><div class="fill" style="width:78%"></div></div><span class="vv">61.7%</span></div>
+        <div class="barrow"><span class="nm">Wednesday</span><div class="track"><div class="fill" style="width:78%"></div></div><span class="vv">61.3%</span></div>
+        <div class="barrow"><span class="nm">Thursday</span><div class="track"><div class="fill" style="width:61%"></div></div><span class="vv">47.7%</span></div>
+        <div class="barrow"><span class="nm">Friday</span><div class="track"><div class="fill" style="width:48%"></div></div><span class="vv">37.4%</span></div>
+      </div>
+    </div>
+    <div class="panel pad">
+      <div class="lbl" style="margin-bottom:4px">Sales lift by store format and range</div>
+      <p style="font-size:13px;color:var(--mute);margin:0 0 16px;font-family:var(--ui)">Formats A&ndash;D are StoreType; basic and extra are Assortment A and B. Table 7 of the technical report.</p>
+      <div class="bars">
+        <div class="barrow"><span class="nm">Format A</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="vv">78.7%</span></div>
+        <div class="barrow"><span class="nm">Format B</span><div class="track"><div class="fill" style="width:77%"></div></div><span class="vv">60.7%</span></div>
+        <div class="barrow"><span class="nm">Format C</span><div class="track"><div class="fill" style="width:71%"></div></div><span class="vv">56.2%</span></div>
+        <div class="barrow"><span class="nm">Format D</span><div class="track"><div class="fill" style="width:78%"></div></div><span class="vv">61.2%</span></div>
+        <div class="barrow"><span class="nm">Basic range</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="vv">78.7%</span></div>
+        <div class="barrow"><span class="nm">Extra range</span><div class="track"><div class="fill" style="width:54%"></div></div><span class="vv">42.5%</span></div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="panel pad" style="margin-top:26px">
+    <div class="lbl">Before adjustment: raw sales lift by condition</div>
+    <p>What the unadjusted comparisons showed, before store, calendar and holiday differences were controlled. The modelled figures above are the like-for-like versions. <span class="ref">&sect;3.3.2</span></p>
+    <div class="bars" style="margin-top:16px">
+      <div class="barrow"><span class="nm">Format A</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="vv">48.5%</span></div>
+      <div class="barrow"><span class="nm">Format B</span><div class="track"><div class="fill" style="width:38%"></div></div><span class="vv">18.2%</span></div>
+      <div class="barrow"><span class="nm">Basic range</span><div class="track"><div class="fill" style="width:85%"></div></div><span class="vv">41.0%</span></div>
+      <div class="barrow"><span class="nm">Extended range</span><div class="track"><div class="fill" style="width:65%"></div></div><span class="vv">31.5%</span></div>
+      <div class="barrow"><span class="nm">Extra range</span><div class="track"><div class="fill" style="width:15%"></div></div><span class="vv">7.3%</span></div>
+      <div class="barrow"><span class="nm">Competitor far</span><div class="track"><div class="fill" style="width:82%"></div></div><span class="vv">39.7%</span></div>
+      <div class="barrow"><span class="nm">No competitor</span><div class="track"><div class="fill" style="width:70%"></div></div><span class="vv">33.8%</span></div>
+      <div class="barrow"><span class="nm">Competitor near</span><div class="track"><div class="fill" style="width:55%"></div></div><span class="vv">26.5%</span></div>
+    </div>
+    <div class="note" style="margin-top:18px"><b>Why the two sets differ.</b> Raw lift compares promotion days against non-promotion days without accounting for which stores ran them, in which months, or alongside what else. The modelled figures compare each store against itself under matched conditions, which is why they are larger and why they are the ones to plan against.</div>
+  </div>
+
+  <div class="note" style="margin-top:22px"><b>What to do with this.</b> Put more promotional stock and staffing behind Monday to Wednesday, and stop assuming one lift figure holds all week. Set promotion intensity by format and range rather than centrally, and look specifically at how promotions are designed and executed in extra-range stores, which respond least. One clarification worth stating: because each store already has its own baseline, these figures compare how differently stores <em>respond to promotion</em> &mdash; not how much they sell.</div>
+</section>
+
+<section id="other">
+  <div class="shead"><span class="n">03</span><h2>Calendar, competition and the continuing programme</h2></div>
+  <p class="dek">Three more questions were put to the model. Two produced effects worth planning around. One produced nothing &mdash; which is itself worth knowing. <span class="ref">&sect;3.5.4</span></p>
+  <div class="cols3">
+    <div class="cell">
+      <div class="lbl" style="color:var(--red)">Calendar &mdash; use it</div>
+      <h4 style="margin:8px 0 7px">December runs 28.7% above January</h4>
+      <p style="margin:0;font-size:13.5px;color:var(--slate)">Seasonality is strong and reliable. Public holidays run about <b>24.6%</b> above a normal day for stores that open. Easter is up 14.7% but less certain, and Christmas shows a 11.3% dip the model cannot confirm. School holidays register a real but small effect (p&nbsp;=&nbsp;0.0039).</p>
+      <p style="margin:10px 0 0;font-size:13px;color:var(--ink)"><b>So:</b> keep seasonality in the forecast, build extra stock and staffing into December, and remember holiday figures reflect only the stores permitted to open.</p>
+    </div>
+    <div class="cell">
+      <div class="lbl" style="color:var(--red)">Competition &mdash; not usable</div>
+      <h4 style="margin:8px 0 7px">How close a rival is tells us nothing</h4>
+      <p style="margin:0;font-size:13.5px;color:var(--slate)">Once each store has its own baseline, competitor distance adds nothing to the forecast (p&nbsp;=&nbsp;0.400). The raw numbers are revealing too: stores with no rival at all average &euro;9,075, but those with one <em>nearby</em> average &euro;8,302 against &euro;7,094 for those with one further away &mdash; the opposite of what you would expect, and probably because busy locations attract competitors. Near and far are split at <b>1,630 metres</b>, the sample median.</p>
+      <p style="margin:10px 0 0;font-size:13px;color:var(--ink)"><b>So:</b> stop using proximity as an explanation for performance. Competition may well matter &mdash; distance is simply the wrong measure of it.</p>
+    </div>
+    <div class="cell">
+      <div class="lbl" style="color:var(--red)">Continuing programme &mdash; keep it</div>
+      <h4 style="margin:8px 0 7px">Valuable, despite how the raw numbers look</h4>
+      <p style="margin:0;font-size:13.5px;color:var(--slate)">On the face of it, sales are <b>2.8% lower</b> while the programme is running. But that compares different stores in different months with different offers on. Once those are held constant, the programme does add forecasting value &mdash; and it changes how well day promotions perform. Stores on <b>Plans A and C</b> get more from a day promotion; stores on <b>Plan B</b> get less.</p>
+      <p style="margin:10px 0 0;font-size:13px;color:var(--ink)"><b>So:</b> keep the programme in the forecast, but stop judging it as one thing. Measure each plan separately.</p>
+    </div>
+  </div>
+</section>
+
+
+<section id="planning">
+  <div class="shead"><span class="n">04</span><h2>Planning inventory and staffing</h2></div>
+  <p class="dek">Promotion is the most visible use of the forecast, but not the only one. Because every input is known before the trading day, the same forecast can be used to size stock and shifts weeks ahead. <span class="ref">&sect;3.2, &sect;3.6</span></p>
+
+  <div class="cols3" style="margin-bottom:26px">
+    <div class="cell">
+      <div class="lbl" style="color:var(--red)">The central number</div>
+      <h4 style="margin:9px 0 8px">Plan to the forecast</h4>
+      <p>Use the point forecast as the expected sales figure for a given store on a given day, and size replenishment and shifts against it. On ordinary trading days it is stable enough to plan on directly.</p>
+    </div>
+    <div class="cell">
+      <div class="lbl" style="color:var(--red)">The spread</div>
+      <h4 style="margin:9px 0 8px">Size the buffer to the range</h4>
+      <p>Around every forecast sits a planning range. Its lower and upper limits are what stock cover and shift cover should be set against &mdash; not the central number alone. Treat them as decision-support bounds, not guaranteed minimums or maximums.</p>
+    </div>
+    <div class="cell">
+      <div class="lbl" style="color:var(--red)">The exceptions</div>
+      <h4 style="margin:9px 0 8px">Override on unusual days</h4>
+      <p>Very high and very low days remain the hardest to predict. Where a store team already expects something out of the ordinary, their knowledge should take precedence over the forecast.</p>
+    </div>
+  </div>
+
+  <div class="panel pad">
+    <div class="lbl">Where the forecast changes what you would otherwise plan</div>
+    <p>Four patterns the model identifies well in advance, each with a direct operational consequence.</p>
+    <table class="tbl" style="margin-top:16px">
+      <thead><tr><th>Known in advance</th><th>Effect on sales</th><th>What it means for stock and shifts</th></tr></thead>
+      <tbody>
+        <tr><td>December</td><td class="n">+28.7%</td><td>Largest seasonal build of the year. Plan replenishment and additional hours well ahead of the month, not into it.</td></tr>
+        <tr><td>Public holidays</td><td class="n">+24.6%</td><td>Strong days for the stores permitted to open. Check which stores those are before reading the figure across the estate.</td></tr>
+        <tr><td>Promotion, Monday to Wednesday</td><td class="n">+78.7%<br>to +61.3%</td><td>The heaviest demand days in the week. Weight promotional stock and cover here.</td></tr>
+        <tr><td>Promotion, Thursday to Friday</td><td class="n">+47.7%<br>to +37.4%</td><td>Materially lighter. Holding the same cover as Monday over-resources the back half of the week.</td></tr>
+      </tbody>
+    </table>
+    <div class="note" style="margin-top:20px"><b>The report&rsquo;s recommendation.</b> Allocate more promotional inventory and staffing support to Monday through Wednesday, and do not assume the same uplift applies throughout the week. Because no regular promotions were observed on Saturday or Sunday, no weekend effect can be estimated. <span class="ref">&sect;3.5.4</span></div>
+  </div>
+</section>
+
+<div class="band">
+<section id="planner">
+  <div class="shead"><span class="n">05</span><h2>Using the forecast to plan</h2></div>
+  <p class="dek">The technical report establishes that point forecasts can serve as central daily estimates for inventory, staffing and promotional planning, and that prediction intervals provide realistic planning ranges. This tool applies the fitted model in that way. Every input is known before the trading day, so a month can be forecast in advance. Click any weekday to place or remove a regular promotion. <span class="ref">&sect;3.6</span></p>
+  <div class="note" style="margin-bottom:22px;max-width:none">
+    <b>About the sales index.</b> The model was fitted on 2014–15 trading and contains no growth trend, so it cannot know what has happened to sales volumes since. What it does know is <em>shape</em>: seasonality, weekday response and promotion lift are all multiplicative, so the ranking of promotion days — and therefore the optimal calendar — is unchanged by growth. Set the index to your current turnover against the 2014–15 baseline (100 means unchanged, 140 means trading 40% higher) and every euro figure rescales. Leave it at 100 and read the figures as relative rather than absolute.
+  </div>
+
+  <div class="bar">
+    <div class="ctl"><label for="scope">Planning for</label><select id="scope"></select></div>
+    <div class="ctl"><label for="month">Month</label><select id="month"></select></div>
+    <div class="ctl"><label for="year">Year</label><select id="year">
+      <option value="2026" selected>2026</option><option value="2027">2027</option></select></div>
+    <div class="ctl"><label for="budget">Promotion days available</label><input type="number" id="budget" min="0" max="23" value="11"></div>
+    <div class="ctl"><label for="idx">Sales index</label><input type="number" id="idx" min="20" max="400" step="1" value="100"></div>
+    <button id="opt">Rank by forecast</button>
+    <button class="ghost" id="clr">Clear</button>
+  </div>
+
+  <div class="grid2">
+    <div class="panel pad">
+      <div id="ctx" style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:16px;font-size:12.5px"></div>
+      <div class="cal" id="cal"></div>
+      <div class="note" style="margin-top:16px" id="cycnote"></div>
+    </div>
+
+    <div class="panel pad">
+      <div class="stat hero">
+        <div class="k">Forecast turnover, this plan</div>
+        <div class="v" id="s-total">—</div>
+        <div class="s" id="s-range">—</div>
+      </div>
+      <div class="stat">
+        <div class="k">Incremental from promotions</div>
+        <div class="v" id="s-inc">—</div>
+        <div class="s" id="s-incpct">—</div>
+      </div>
+      <div class="stat">
+        <div class="k">Promotion days used</div>
+        <div class="v" id="s-used">—</div>
+        <div class="budgetbar"><div id="s-bar" style="width:0%"></div></div>
+      </div>
+      <div class="stat">
+        <div class="k">Best possible arrangement</div>
+        <div class="v" id="s-best">—</div>
+        <div class="s" id="s-gap">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout"><p id="verdict">—</p></div>
+</section>
+
+<section id="weekday">
+  <div class="shead"><span class="n">&nbsp;</span><h2>Weekday comparison</h2></div>
+  <p class="dek">The same number of promotion days can be worth substantially different amounts depending on which weekdays they land on. This is your current plan against the best available arrangement, by weekday.</p>
+  <div class="panel pad">
+    <table class="tbl">
+      <thead><tr><th>Weekday</th><th class="n">Value per day</th><th class="n">Your plan</th><th class="n">Best plan</th><th class="n">Difference</th></tr></thead>
+      <tbody id="dow-tb"></tbody>
+    </table>
+  </div>
+
+  <h3 style="margin:44px 0 6px">Forecasting a single day</h3><p class="dek" style="margin-bottom:20px">The same model applied to one store on one date, with and without a regular promotion. Store format, product range, competition and programme plan are read from the store record. <span class="ref">&sect;3.6.1</span></p>
+  <div class="split3">
+    <div class="panel pad">
+      <div class="ctl"><label for="p-store">Store</label><select id="p-store"></select>
+        <span class="hint">Format, range and coupon cycle are read from the store record.</span></div>
+      <div class="split" style="gap:14px">
+        <div class="ctl"><label for="p-month">Month</label><select id="p-month"></select></div>
+        <div class="ctl"><label for="p-dow">Weekday</label><select id="p-dow"></select></div>
+      </div>
+      <div class="ctl"><label>This store</label>
+        <div id="p-chips" style="display:flex;gap:9px;flex-wrap:wrap;font-size:13px"></div></div>
+    </div>
+    <div class="result">
+      <span class="cap">Incremental turnover, this one day</span>
+      <div class="big" id="p-inc">—</div>
+      <hr>
+      <div class="rrow"><span>Without a promotion</span><span id="p-base">—</span></div>
+      <div class="rrow"><span>With a promotion</span><span id="p-promo">—</span></div>
+      <div class="rrow"><span>Response rate</span><span id="p-lift">—</span></div>
+      <div class="rrow"><span>Rank across the estate</span><span id="p-rank">—</span></div>
+      <div class="verdict v-go" id="p-verdict">—</div>
+    </div>
+  </div>
+
+</section>
+</div>
+
+<section id="limits">
+  <div class="shead"><span class="n">06</span><h2>What the model cannot tell you</h2></div>
+  <p class="dek">This forecast supports decisions; it does not make them. It is built for stores we already trade, under conditions like those we have seen. Six things it cannot do. <span class="ref">&sect;IV</span></p>
+  <div class="cols3">
+    <div class="cell"><div class="lbl">Coverage</div><h4 style="margin:8px 0 7px">It covers 100 stores</h4><p style="margin:0;font-size:13.5px;color:var(--slate)">These stores may not behave like the rest of the network. Treat the findings as strongly indicative rather than settled for every location.</p></div>
+    <div class="cell"><div class="lbl">New stores</div><h4 style="margin:8px 0 7px">It cannot forecast a new store</h4><p style="margin:0;font-size:13.5px;color:var(--slate)">The model learns each store&rsquo;s level from its own history. A store that has not traded yet has no history to learn from.</p></div>
+    <div class="cell"><div class="lbl">Causality</div><h4 style="margin:8px 0 7px">It shows patterns, not causes</h4><p style="margin:0;font-size:13.5px;color:var(--slate)">Some of the promotion lift may reflect that we schedule promotions when we already expect a strong day. The figures should not be read as sales created purely by the promotion.</p></div>
+    <div class="cell"><div class="lbl">Missing data</div><h4 style="margin:8px 0 7px">It knows nothing about margin</h4><p style="margin:0;font-size:13.5px;color:var(--slate)">Pricing, discount depth, promotion cost, stock, stockouts, product mix, weather and local traffic were all unavailable. Every figure here is turnover, not profit.</p></div>
+    <div class="cell"><div class="lbl">Extremes</div><h4 style="margin:8px 0 7px">Exceptional days remain hard</h4><p style="margin:0;font-size:13.5px;color:var(--slate)">Very high and very low sales days are less predictable than ordinary ones, and the widest planning ranges still missed a small number of them &mdash; the 99% range captured 97.74% rather than 99%. Use judgment on days you already expect to be unusual.</p></div>
+    <div class="cell"><div class="lbl">Method</div><h4 style="margin:8px 0 7px">It favours clarity over complexity</h4><p style="margin:0;font-size:13.5px;color:var(--slate)">The method was chosen so every effect can be explained to a manager. That trade-off means it may miss tipping points and more tangled relationships. It also applies only to open trading days.</p></div>
+  </div>
+
+  <div class="panel pad" style="margin-top:30px">
+    <div class="lbl">How the forecast was checked</div>
+    <p>Three tests were run on the model&rsquo;s errors to establish where it can be trusted and where it cannot. <span class="ref">&sect;3.5.1&ndash;3.5.3</span></p>
+    <table class="tbl" style="margin-top:16px">
+      <thead><tr><th>Test</th><th>What it found</th><th>What was done about it</th></tr></thead>
+      <tbody>
+        <tr><td>Spread of errors</td>
+          <td>Errors are not equally sized across the range &mdash; they narrow as forecast sales rise.</td>
+          <td>The statistical tests were re-run using a method that corrects for this. Forecasts and accuracy figures are unaffected; only the confidence in individual findings changes.</td></tr>
+        <tr><td>Shape of errors</td>
+          <td>Ordinary days sit close to the expected pattern, but both extremes depart from it, with one very large negative error.</td>
+          <td>With 31,249 training days the pattern is not a concern for the conclusions. It is the reason exceptional days carry wider ranges.</td></tr>
+        <tr><td>Unusual observations</td>
+          <td>1,507 store-days flagged for review against a very low threshold. The most extreme is Store 652 on 22 November 2014, which recorded sales of just 46.</td>
+          <td>None was removed. The largest influence score was 0.0175 against a conventional benchmark of 1, so no single day distorts the model. Flagged days should be checked against operational records.</td></tr>
+      </tbody>
+    </table>
+    <div class="note" style="margin-top:20px"><b>Why this matters commercially.</b> Nothing was quietly deleted to make the model look better. The 1,507 flagged days are a review list, not a cleanup list &mdash; several may be genuine closures, stock shortages or system faults worth investigating in their own right.</div>
+  </div>
+
+</section>
+
+<section id="decide">
+  <div class="shead"><span class="n">07</span><h2>What to do differently</h2></div>
+  <p class="dek">Eight changes the analysis supports, each with the finding that backs it. <span class="ref">&sect;3.5.4, &sect;IV</span></p>
+  <div class="acts">
+    <div class="act"><span class="n">01</span><h3>Forecast each store separately</h3>
+      <p class="lead">Replace network averages with a forecast for each store. What separates a strong location from a weak one is not its format or its competition &mdash; it is the location itself, and that only shows up store by store.</p>
+      <dl><dt>Because</dt><dd>Knowing the store takes forecast accuracy from <b>28%</b> to <b>81%</b></dd></dl></div>
+
+    <div class="act"><span class="n">02</span><h3>Find out what the store effect is made of</h3>
+      <p class="lead">The store effect is the single biggest thing in the model and we cannot see inside it. Start capturing footfall, catchment, floor space, capacity, availability and management data so the gap between our best and worst stores becomes something we can act on.</p>
+      <dl><dt>Because</dt><dd>Store differences carry more forecasting power than every business factor combined</dd></dl></div>
+
+    <div class="act"><span class="n">03</span><h3>Shift promotion support to earlier in the week</h3>
+      <p class="lead">Move promotional stock and staffing toward Monday to Wednesday. The same promotion, run later in the week, returns roughly half as much.</p>
+      <dl><dt>Because</dt><dd>Uplift falls from <b>78.7%</b> on Monday to <b>37.4%</b> by Friday</dd></dl></div>
+
+    <div class="act"><span class="n">04</span><h3>Plan promotions by format and product mix</h3>
+      <p class="lead">Set promotion intensity by store format and product range instead of centrally. Look hardest at extra-range stores, where promotions return least &mdash; the issue there may be the offer design rather than the discount.</p>
+      <dl><dt>Because</dt><dd>Lift ranges from <b>78.7%</b> in the strongest segment to <b>42.5%</b> in the weakest</dd></dl></div>
+
+    <div class="act"><span class="n">05</span><h3>Build the calendar into inventory and rosters</h3>
+      <p class="lead">Keep seasonality in the forecast and build December into stock and rota planning well ahead. Where holiday figures look strong, check how many stores were actually open before reading across.</p>
+      <dl><dt>Because</dt><dd>December runs <b>28.7%</b> above January and public holidays <b>24.6%</b> above a normal day</dd></dl></div>
+
+    <div class="act"><span class="n">06</span><h3>Do not act on competitor distance</h3>
+      <p class="lead">Proximity to a rival should stop being used to explain a store&rsquo;s performance or to justify where resource goes. If competition matters &mdash; and it may &mdash; we need data on rival size, pricing, quality and local footfall before we can say so.</p>
+      <dl><dt>Because</dt><dd>Competitor distance adds <b>nothing measurable</b> to the forecast</dd></dl></div>
+
+    <div class="act"><span class="n">07</span><h3>Keep the continuing programme, but judge it plan by plan</h3>
+      <p class="lead">The programme improves our forecasts and changes how well day promotions perform, but it does not raise sales on its own. Measure each plan separately rather than reporting the programme as one number.</p>
+      <dl><dt>Because</dt><dd>Plans A and C strengthen day-promotion response; Plan B weakens it</dd></dl></div>
+
+    <div class="act"><span class="n">08</span><h3>Plan to a range, not a single number</h3>
+      <p class="lead">Plan to the forecast as the expected number and the range around it as the realistic spread. Neither is a floor or a ceiling &mdash; use them alongside what the store team already knows about the week ahead.</p>
+      <dl><dt>Because</dt><dd>Planning ranges captured <b>95.3%</b> of what actually happened</dd></dl></div>
+  </div>
+  <div class="callout"><p>This is a strong forecasting baseline &mdash; but it is <b>a decision-support tool, not a demand-management system</b>. It tells us what demand is likely to be; it cannot yet tell us how to shape it. Adding pricing, discount depth, promotion cost, customer behaviour, stock availability and margin would close that loop: target an offer, observe the response, and update the next decision from what happened.</p></div>
+</section>
+
+
+<section id="glossary" class="orient">
+  <div class="shead"><span class="n">Reference</span><h2>Terms used on this page</h2></div>
+  <p class="dek">Plain-English names used throughout, with the term each one corresponds to in the technical report.</p>
+  <div class="panel pad" style="margin-top:22px">
+    <div class="lbl" style="margin-bottom:16px">Other terms used on this page</div>
+    <div class="gloss">
+      <div class="gl"><div class="t">Store baseline</div><div class="d">Store fixed effects</div><p>The persistent trading level of a location once calendar and promotion effects are stripped out.</p></div>
+      <div class="gl"><div class="t">Store format</div><div class="d">StoreType A&ndash;D</div><p>Rossmann&rsquo;s own store model categories. The data does not document what distinguishes them.</p></div>
+      <div class="gl"><div class="t">Product range</div><div class="d">Assortment A, B, C</div><p>Basic range (A), extra range (B) and extended range (C).</p></div>
+      <div class="gl"><div class="t">Sales lift</div><div class="d">Promotion uplift</div><p>How much a day promotion raises sales above the same store on a comparable non-promotion day.</p></div>
+      <div class="gl"><div class="t">Planning range</div><div class="d">Prediction interval</div><p>The range around a forecast within which actual sales are expected to fall.</p></div>
+      <div class="gl"><div class="t">Forecast accuracy</div><div class="d">Test R&sup2;</div><p>The share of day-to-day variation in sales the model explains on data it has never seen.</p></div>
+    </div>
+  </div>
+
+</section>
+
+<footer>
+  <div class="cols">
+    <div>
+      <h4>Relationship to the technical report</h4>
+      <p>Every figure on this page is taken from <em>Rossmann Store Sales Forecast</em>, with its source section marked beside it. No variable has been added, no specification altered, and no analysis performed outside that document.</p>
+      <p>The forecasting tool in Section 04 evaluates the report&rsquo;s fitted All Business Interactions model. Its outputs are that model&rsquo;s own predictions applied to future dates.</p>
+    </div>
+    <div>
+      <h4>The model</h4>
+      <p>OLS on LogSales across 100 stores, January 2014 to February 2015, with store fixed effects, month, day of week, state and school holidays, Promo2 category and competition exposure, plus regular-promotion interactions with weekday, StoreType, Assortment, competition exposure, school-holiday status and Promo2 plan.</p>
+      <p>Estimated on 2014 data and tested on the unseen January&ndash;February 2015 period. Because residuals are heteroskedastic, inference uses HC3 robust standard errors, which correct the standard errors without changing coefficients, fitted values or forecasts.</p>
+    </div>
+    <div>
+      <h4>Reading the figures</h4>
+      <p><b>Promotion uplift</b> &mdash; the percentage sales effect of a regular daily promotion under the model&rsquo;s stated reference conditions, obtained by combining the relevant main and interaction coefficients before transformation.</p>
+      <p><b>Store baseline</b> &mdash; the persistent trading level of a location, captured by store fixed effects.</p>
+      <p><b>Prediction interval</b> &mdash; a planning range around the point forecast, treated as decision support rather than a guaranteed minimum or maximum.</p>
+    </div>
+  </div>
+  <div class="colophon">
+    <span class="cwm">Agnes <i>&amp;</i> Co<span style="color:var(--red)">.</span></span>
+    <span>Retail Analytics</span>
+    <span style="margin-left:auto">Companion to Rossmann Store Sales Forecast &middot; MMA 860 &middot; August 2026</span>
+  </div>
+</footer>
+
+</div>
+
+<script>
+const SFE=[[16,0.0],[38,-0.2872],[80,-0.0238],[85,-0.0935],[122,-0.2151],[123,-0.0068],[168,-0.0853],[182,-0.31],[202,-0.1759],[206,-0.0815],[229,0.1562],[230,0.0362],[251,0.884],[253,-0.3651],[255,-0.1507],[259,0.5153],[262,0.9589],[274,-0.5729],[282,-0.6328],[297,-0.1578],[325,-0.201],[330,-0.6288],[335,0.4862],[351,-0.2764],[353,-0.1979],[360,-0.1692],[362,0.2336],[372,0.1653],[381,0.102],[414,-0.1399],[423,0.2974],[467,0.5568],[472,-0.3442],[474,-0.0287],[479,0.3134],[487,-0.0417],[489,-0.1718],[494,-0.0289],[502,0.2864],[509,-0.2962],[517,-0.293],[525,0.3086],[541,-0.15],[545,0.3088],[554,-0.4568],[556,-0.005],[560,0.6163],[562,0.8661],[565,-0.1686],[595,0.6789],[596,-0.5395],[603,-0.1646],[606,-0.3486],[607,-0.8383],[631,-0.3043],[643,-0.0235],[648,-0.1462],[652,-0.2327],[662,0.0315],[676,0.0985],[681,-0.7765],[682,0.3123],[686,-0.326],[687,0.1385],[696,0.0001],[715,-0.3088],[733,0.7504],[742,0.0811],[743,-0.7766],[769,0.4465],[770,-0.1902],[772,-0.674],[773,-0.3995],[790,0.0056],[829,-0.2673],[834,-0.3623],[861,-0.7113],[865,0.0217],[882,-0.2596],[891,0.0347],[912,-0.2371],[917,-0.2129],[924,-0.5504],[944,0.0087],[948,-0.0069],[960,-0.1381],[962,-0.129],[988,-0.564],[1021,0.0899],[1028,-0.5523],[1029,-0.478],[1035,-0.5819],[1058,-0.0902],[1061,0.0303],[1081,-0.267],[1087,-0.1758],[1088,-0.4733],[1097,0.3063],[1103,-0.381],[1115,-0.1373]];
+const SMETA={"16":["a","c","none","far"],"38":["d","a","none","near"],"80":["d","a","none","far"],"85":["b","a","none","far"],"122":["a","c","none","far"],"123":["a","a","none","far"],"168":["a","a","none","far"],"182":["d","c","C","near"],"202":["d","c","none","far"],"206":["a","c","A","near"],"229":["d","c","A","far"],"230":["d","c","none","far"],"251":["a","c","none","near"],"253":["a","c","B","near"],"255":["c","c","B","far"],"259":["b","b","none","near"],"262":["b","a","none","near"],"274":["b","b","A","far"],"282":["a","a","none","near"],"297":["a","a","none","far"],"325":["a","c","B","near"],"330":["a","c","C","near"],"335":["b","a","A","near"],"351":["a","a","B","far"],"353":["b","b","B","near"],"360":["a","a","none","far"],"362":["c","c","none","near"],"372":["d","c","A","far"],"381":["a","a","B","far"],"414":["d","c","A","far"],"423":["b","a","none","near"],"467":["a","c","none","far"],"472":["c","c","none","far"],"474":["c","a","C","far"],"479":["a","a","B","near"],"487":["d","c","A","far"],"489":["a","a","A","far"],"494":["b","a","none","near"],"502":["a","a","A","near"],"509":["a","a","A","far"],"517":["a","c","none","far"],"525":["d","c","none","far"],"541":["a","c","none","near"],"545":["a","c","B","far"],"554":["c","c","none","near"],"556":["d","c","none","near"],"560":["c","c","none","far"],"562":["b","c","none","near"],"565":["a","c","none","near"],"595":["c","c","none","near"],"596":["c","a","none","near"],"603":["a","a","A","near"],"606":["a","a","none","far"],"607":["a","a","A","near"],"631":["d","c","C","far"],"643":["a","a","B","near"],"648":["d","a","none","far"],"652":["a","a","none","far"],"662":["d","a","none","near"],"676":["b","b","none","near"],"681":["a","c","C","near"],"682":["b","a","none","near"],"686":["a","a","none","far"],"687":["d","c","none","far"],"696":["a","c","none","near"],"715":["a","a","none","far"],"733":["b","b","none","near"],"742":["d","c","none","far"],"743":["a","a","A","far"],"769":["b","b","A","near"],"770":["a","c","none","near"],"772":["d","c","none","far"],"773":["a","a","none","near"],"790":["d","c","none","far"],"829":["c","a","none","near"],"834":["a","a","none","far"],"861":["c","c","C","near"],"865":["d","c","none","far"],"882":["a","a","none","near"],"891":["a","c","B","near"],"912":["c","c","none","far"],"917":["a","a","none","far"],"924":["a","a","A","far"],"944":["c","a","none","far"],"948":["b","b","none","near"],"960":["d","a","B","far"],"962":["c","a","none","near"],"988":["a","a","none","near"],"1021":["a","a","none","near"],"1028":["a","a","A","near"],"1029":["a","a","none","near"],"1035":["a","a","none","far"],"1058":["a","c","C","near"],"1061":["d","c","none","far"],"1081":["b","a","none","near"],"1087":["d","c","none","far"],"1088":["a","a","A","far"],"1097":["b","b","none","near"],"1103":["d","c","B","near"],"1115":["d","c","C","far"]};
+
+const E={"i":8.7403,"sig":0.1872,"fe":{"38":-0.2872,"80":-0.0238,"85":-0.0935,"122":-0.2151,"123":-0.0068,"168":-0.0853,"182":-0.31,"202":-0.1759,"206":-0.0815,"229":0.1562,"230":0.0362,"251":0.884,"253":-0.3651,"255":-0.1507,"259":0.5153,"262":0.9589,"274":-0.5729,"282":-0.6328,"297":-0.1578,"325":-0.201,"330":-0.6288,"335":0.4862,"351":-0.2764,"353":-0.1979,"360":-0.1692,"362":0.2336,"372":0.1653,"381":0.102,"414":-0.1399,"423":0.2974,"467":0.5568,"472":-0.3442,"474":-0.0287,"479":0.3134,"487":-0.0417,"489":-0.1718,"494":-0.0289,"502":0.2864,"509":-0.2962,"517":-0.293,"525":0.3086,"541":-0.15,"545":0.3088,"554":-0.4568,"556":-0.005,"560":0.6163,"562":0.8661,"565":-0.1686,"595":0.6789,"596":-0.5395,"603":-0.1646,"606":-0.3486,"607":-0.8383,"631":-0.3043,"643":-0.0235,"648":-0.1462,"652":-0.2327,"662":0.0315,"676":0.0985,"681":-0.7765,"682":0.3123,"686":-0.326,"687":0.1385,"696":0.0001,"715":-0.3088,"733":0.7504,"742":0.0811,"743":-0.7766,"769":0.4465,"770":-0.1902,"772":-0.674,"773":-0.3995,"790":0.0056,"829":-0.2673,"834":-0.3623,"861":-0.7113,"865":0.0217,"882":-0.2596,"891":0.0347,"912":-0.2371,"917":-0.2129,"924":-0.5504,"944":0.0087,"948":-0.0069,"960":-0.1381,"962":-0.129,"988":-0.564,"1021":0.0899,"1028":-0.5523,"1029":-0.478,"1035":-0.5819,"1058":-0.0902,"1061":0.0303,"1081":-0.267,"1087":-0.1758,"1088":-0.4733,"1097":0.3063,"1103":-0.381,"1115":-0.1373,"16":0.0},"mon":[0,0.0282,0.0066,0.0812,0.0632,0.0772,0.0354,0.0202,0.0096,0.0341,0.0861,0.2526],"dow":[0,-0.0498,-0.121,-0.049,0.0422,-0.1107,0.1674],"p2c":{"A":0,"B":0.0464,"C":0.0163,"none":0.0321},"comp":{"far":0,"near":0.0117,"none":0.0115},"sh":0.0117,"pr":0.5805,"pdow":[0,-0.1,-0.1024,-0.1902,-0.2624],"pty":{"a":0,"b":-0.1063,"c":-0.1343,"d":-0.103},"pas":{"a":0,"b":-0.2266,"c":-0.0921},"pcomp":{"none":0,"near":-0.0164,"far":-0.0107},"psh":-0.0161,"pp2":{"none":0,"A":0.0603,"B":-0.0415,"C":0.0452}};
+const P2M={A:[1,4,7,10],B:[2,5,8,11],C:[3,6,9,12]};
+const MNAME=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const TYPE={a:"StoreType A",b:"StoreType B",c:"StoreType C",d:"StoreType D"};
+const ASST={a:"Assortment A (basic)",b:"Assortment B (extra)",c:"Assortment C (extended)"};
+const COMP={near:"Active near",far:"Active far",none:"No active competitor"};
+const SIGMA=E.sig;
+
+const $=i=>document.getElementById(i);
+const eur=v=>"\u20ac"+Math.round(v).toLocaleString("en-GB");
+const eurK=v=>v>=1e6?"\u20ac"+(v/1e6).toFixed(2)+"m":v>=1e4?"\u20ac"+Math.round(v/1e3)+"k":eur(v);
+const IDS=Object.keys(SMETA).map(Number).sort((a,b)=>a-b);
+
+function cycActive(id,m){const c=SMETA[id][2];
+  return c!=="none"&&P2M[c].includes(m+1)?c:"none";}
+const isOpen=(id,dw)=>dw===6?SMETA[id][0]==="b":true;
+
+function daySales(id,m,dw,promo){
+  const mm=SMETA[id], cy=cycActive(id,m), comp=mm[3];
+  const base=E.i+E.fe[id]+E.mon[m]+E.dow[dw]+E.p2c[cy]+E.comp[comp];
+  if(!promo||dw>4) return Math.exp(base);
+  const d=E.pr+E.pdow[dw]+E.pty[mm[0]]+E.pas[mm[1]]+E.pp2[cy]+E.pcomp[comp];
+  return Math.exp(base+d);
+}
+function dayTotals(ids,m,dw){
+  let b=0,p=0;
+  ids.forEach(id=>{ if(!isOpen(id,dw)) return;
+    b+=daySales(id,m,dw,false);
+    if(dw<5) p+=daySales(id,m,dw,true); });
+  return {base:b,promo:dw<5?p:b,inc:dw<5?p-b:0};
+}
+
+// scope options: whole sample, store types, then individual stores
+let opts=`<option value="all">Entire sample \u2014 100 stores</option>`;
+["a","b","c","d"].forEach(k=>{
+  const n=IDS.filter(i=>SMETA[i][0]===k).length;
+  if(n) opts+=`<option value="t${k}">${TYPE[k]} \u2014 ${n} stores</option>`;
+});
+IDS.forEach(i=>{opts+=`<option value="s${i}">Store ${i} \u2014 ${TYPE[SMETA[i][0]]}</option>`;});
+$("scope").innerHTML=opts;
+$("scope").value="all";
+$("month").innerHTML=MNAME.map((mo,i)=>`<option value="${i}"${i===8?" selected":""}>${mo}</option>`).join("");
+
+const groupIds=()=>{
+  const v=$("scope").value;
+  if(v==="all") return IDS;
+  if(v[0]==="t") return IDS.filter(i=>SMETA[i][0]===v.slice(1));
+  return [+v.slice(1)];
+};
+
+let PLAN=new Set();
+
+function build(){
+  const m=+$("month").value, y=+$("year").value, ids=groupIds();
+  const k=(+$("idx").value||100)/100;
+  const first=new Date(y,m,1), dim=new Date(y,m+1,0).getDate();
+  const lead=(first.getDay()+6)%7;   // Monday-first
+  const days=[];
+  for(let d=1;d<=dim;d++){
+    const dw=(new Date(y,m,d).getDay()+6)%7;
+    const tt=dayTotals(ids,m,dw);
+    days.push({d:d,dw:dw,base:tt.base*k,promo:tt.promo*k,inc:tt.inc*k});
+  }
+  return {m,y,ids,days,lead};
+}
+
+function render(){
+  const S=build(), m=S.m;
+  // context chips
+  const v=$("scope").value;
+  let chips=[];
+  if(v[0]==="s"){const id=+v.slice(1),mm=SMETA[id];
+    chips=[["Store type",TYPE[mm[0]]],["Assortment",ASST[mm[1]]],["Competition",COMP[mm[3]]],
+           ["Promo2",mm[2]==="none"?"not participating":"Plan "+mm[2]]];
+  } else {
+    const enr=S.ids.filter(i=>SMETA[i][2]!=="none").length;
+    chips=[["Stores",S.ids.length],["In Promo2",enr],["Trading days",S.days.filter(d=>d.dw<6).length]];
+  }
+  $("ctx").innerHTML=chips.map(c=>`<span style="background:#f1eeea;padding:4px 10px;border-radius:2px"><span style="color:var(--mute);font-size:11px">${c[0]}</span> <b>${c[1]}</b></span>`).join("");
+
+  const live=S.ids.filter(i=>cycActive(i,m)!=="none");
+  $("cycnote").innerHTML = live.length
+    ? `<b>A Promo2 round is active this month</b> for ${live.length} of ${S.ids.length} stores. Plans A and C are associated with a stronger regular-promotion response and Plan B with a weaker one; the forecast accounts for this.`
+    : `<b>No Promo2 round is active in ${MNAME[m]}</b> for this selection, so regular promotions are forecast without a Promo2 interaction.`;
+
+  // calendar
+  let h=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`<div class="dh">${d}</div>`).join("");
+  for(let i=0;i<S.lead;i++) h+=`<div class="day empty"></div>`;
+  S.days.forEach(d=>{
+    const key=d.d, on=PLAN.has(key);
+    if(d.dw===6&&d.base===0){ h+=`<div class="day closed"><span class="dn">${d.d}</span><div class="sv">closed</div></div>`; return; }
+    if(d.dw>=5){ h+=`<div class="day closed"><span class="dn">${d.d}</span><div class="sv">${eurK(d.base)}</div><span class="flag">no promo</span></div>`; return; }
+    h+=`<button class="day sel${on?" on":""}" data-d="${key}" aria-pressed="${on}">
+      <span class="dn">${d.d}</span><div class="sv">${eurK(on?d.promo:d.base)}</div>
+      <div class="inc">${on?"+"+eurK(d.inc):"+"+eurK(d.inc)+" avail."}</div></button>`;
+  });
+  $("cal").innerHTML=h;
+  $("cal").querySelectorAll(".day.sel").forEach(b=>b.onclick=()=>{
+    const k=+b.dataset.d; PLAN.has(k)?PLAN.delete(k):PLAN.add(k); render();
+  });
+
+  // totals
+  const budget=+$("budget").value;
+  let total=0, inc=0, used=0;
+  S.days.forEach(d=>{ if(PLAN.has(d.d)&&d.dw<5){total+=d.promo;inc+=d.inc;used++;} else total+=d.base; });
+  const n=S.ids.length*S.days.filter(d=>d.base>0).length;
+  const rng=SIGMA/Math.sqrt(Math.max(n,1))*1.96;
+  $("s-total").textContent=eurK(total);
+  $("s-range").textContent=`95% range ${eurK(total*Math.exp(-rng))} to ${eurK(total*Math.exp(rng))}`;
+  $("s-inc").textContent=eurK(inc);
+  $("s-incpct").textContent=total>0?((inc/(total-inc))*100).toFixed(1)+"% above an unpromoted month":"—";
+  $("s-used").textContent=`${used} of ${budget}`;
+  const bar=$("s-bar"); bar.style.width=Math.min(used/Math.max(budget,1)*100,100)+"%";
+  bar.className=used>budget?"over":"";
+
+  // best possible
+  const avail=S.days.filter(d=>d.dw<5).sort((a,b)=>b.inc-a.inc);
+  const bestSet=avail.slice(0,Math.min(budget,avail.length));
+  const bestInc=bestSet.reduce((a,d)=>a+d.inc,0);
+  $("s-best").textContent=eurK(bestInc);
+  const gap=bestInc-inc;
+  $("s-gap").textContent=used===0?"place some days to compare"
+    :gap<=1?"your plan is optimal":`${eurK(gap)} more than your plan`;
+
+  const vd=$("verdict");
+  if(used===0) vd.innerHTML=`Place ${budget} promotion days on the calendar, or press <b>Rank by forecast</b> to see where the model would place them.`;
+  else if(used>budget) vd.innerHTML=`This plan uses <b>${used}</b> days against a budget of <b>${budget}</b>. Remove ${used-budget} to compare like for like.`;
+  else if(gap<=1) vd.innerHTML=`These ${used} days are already on the highest-forecast weekdays available in ${MNAME[m]} ${S.y}. Every day is placed on the highest-value slot remaining.`;
+  else vd.innerHTML=`The model forecasts a further <b>${eurK(gap)}</b> from the same <b>${used}</b> promotion days placed on the highest-forecast weekdays for this group.`;
+
+  // weekday table
+  const names=["Monday","Tuesday","Wednesday","Thursday","Friday"];
+  let tb="";
+  for(let dw=0;dw<5;dw++){
+    const all=S.days.filter(d=>d.dw===dw);
+    const mine=all.filter(d=>PLAN.has(d.d)).length;
+    const best=bestSet.filter(d=>d.dw===dw).length;
+    const per=all.length?all[0].inc:0;
+    const diff=best-mine;
+    tb+=`<tr><td>${names[dw]}</td><td class="n">${eurK(per)}</td><td class="n">${mine}</td><td class="n">${best}</td>
+      <td class="n" style="color:${diff>0?"var(--red)":diff<0?"var(--mute)":"var(--mute)"}">${diff>0?"+"+diff:diff||"—"}</td></tr>`;
+  }
+  $("dow-tb").innerHTML=tb;
+}
+
+$("opt").onclick=()=>{
+  const S=build(), budget=+$("budget").value;
+  const avail=S.days.filter(d=>d.dw<5).sort((a,b)=>b.inc-a.inc);
+  PLAN=new Set(avail.slice(0,Math.min(budget,avail.length)).map(d=>d.d));
+  render();
+};
+$("clr").onclick=()=>{PLAN=new Set();render();};
+["scope","month","year"].forEach(i=>$(i).addEventListener("change",()=>{PLAN=new Set();render();}));
+["budget","idx"].forEach(i=>$(i).addEventListener("input",render));
+render();
+
+
+// ---- single-day pricer ----
+(function(){
+  const q=i=>document.getElementById(i);
+  const ids=Object.keys(SMETA).map(Number).sort((a,b)=>a-b);
+  
+  q("p-store").innerHTML=IDS.map(i=>
+    `<option value="${i}">Store ${i} \u2014 ${TYPE[SMETA[i][0]]}</option>`).join("");
+  q("p-store").selectedIndex=0;
+  q("p-month").innerHTML=MNAME.map((m,i)=>`<option value="${i}"${i===8?" selected":""}>${m}</option>`).join("");
+  q("p-dow").innerHTML=["Monday","Tuesday","Wednesday","Thursday","Friday"]
+    .map((d,i)=>`<option value="${i}">${d}</option>`).join("");
+
+  function draw(){
+    const id=+q("p-store").value, m=+q("p-month").value, dw=+q("p-dow").value;
+    const k=(+document.getElementById("idx").value||100)/100;
+    const mm=SMETA[id], cy=cycActive(id,m);
+    const base=daySales(id,m,dw,false)*k, promo=daySales(id,m,dw,true)*k;
+    const inc=promo-base;
+    q("p-inc").textContent=eur(inc);
+    q("p-base").textContent=eur(base);
+    q("p-promo").textContent=eur(promo);
+    q("p-lift").textContent=((promo/base-1)*100).toFixed(1)+"%";
+    const chip=(l,v)=>`<span style="background:#f1eeea;padding:4px 10px;border-radius:2px"><span style="color:var(--mute);font-size:11px">${l}</span> <b>${v}</b></span>`;
+    q("p-chips").innerHTML=chip("Store type",TYPE[mm[0]])+chip("Assortment",ASST[mm[1]])
+      +chip("Competition",COMP[mm[3]])
+      +chip("Promo2",cy==="none"?(mm[2]==="none"?"not participating":"Plan "+mm[2]+", inactive")
+                                :"Plan "+cy+" active");
+    // rank against every store x month x weekday
+    const all=[];
+    ids.forEach(s=>{for(let mo=0;mo<12;mo++)for(let d=0;d<5;d++)
+      all.push(daySales(s,mo,d,true)-daySales(s,mo,d,false));});
+    all.sort((a,b)=>b-a);
+    const raw=inc/k, pos=all.findIndex(v=>v<=raw)+1;
+    const pct=Math.max(Math.round(pos/all.length*100),1);
+    q("p-rank").textContent="top "+pct+"%";
+    const v=q("p-verdict");
+    if(pct<=25){v.className="verdict v-go";v.innerHTML="<b>Worth running.</b> This day sits in the strongest quarter of everything available. Protect it in the calendar.";}
+    else if(pct<=60){v.className="verdict v-go";v.innerHTML="<b>Marginal.</b> It will return something, but the same promotion in a stronger store or earlier in the week would return more at identical cost.";}
+    else{v.className="verdict v-no";v.innerHTML="<b>Decline it.</b> This day is in the weakest tier. If the promotion has to run, move it to a Monday or to a higher-ranked store.";}
+  }
+  ["p-store","p-month","p-dow"].forEach(i=>q(i).addEventListener("change",draw));
+  document.getElementById("idx").addEventListener("input",draw);
+  draw();
+})();
+
+</script>
+<script>
+(function(){
+  const secs=[...document.querySelectorAll('section[id]')];
+  const now=document.getElementById('now');
+  if(!secs.length||!now) return;
+  const label=s=>{const n=s.querySelector('.shead .n'),h=s.querySelector('h2');
+    return n&&h?n.textContent.trim()+' · '+h.textContent.trim():''};
+  const upd=()=>{let cur=secs[0];
+    for(const s of secs){ if(s.getBoundingClientRect().top<=90) cur=s; }
+    now.textContent=label(cur);};
+  addEventListener('scroll',upd,{passive:true}); upd();
+})();
+</script>
+</body>
+</html>
