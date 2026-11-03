@@ -1,0 +1,7 @@
+# Never commit credentials or real data
+local.settings.json
+*.db
+*.pdf
+*.log
+.venv/
+__pycache__/

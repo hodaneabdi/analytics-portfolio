@@ -1,0 +1,14 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "AZSQL_SERVER": "<your-server>.database.windows.net",
+    "AZSQL_DATABASE": "<database>",
+    "AZSQL_USER": "<user>",
+    "AZSQL_PASSWORD": "<password>",
+    "STATEMENTS_STORAGE_CONNECTION_STRING": "",
+    "STATEMENTS_CONTAINER": "statements",
+    "MAX_UPLOAD_BYTES": "26214400"
+  }
+}

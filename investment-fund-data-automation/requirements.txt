@@ -1,0 +1,17 @@
+# Azure Functions Python worker
+azure-functions
+
+# PDF archival to Blob Storage
+azure-storage-blob
+
+# Existing pipeline dependencies (parser.py / fx.py)
+pdfplumber
+requests
+
+# Azure SQL driver - pymssql bundles FreeTDS statically (like psycopg2-binary
+# bundles libpq), so no separate native ODBC driver install is needed on
+# Linux Consumption.
+pymssql
+
+# Pin these to the versions you test against locally before deploying,
+# e.g. via `pip freeze` after a successful `func start` run.
