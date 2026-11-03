@@ -1,6 +1,6 @@
 # Hodane Abdi | Analytics Portfolio
 
-Financial analyst (CPA candidate) completing a Master of Management Analytics at Queen's University, Smith School of Business. This portfolio collects graduate projects where the goal was a business decision, not a model score. Each project starts from a management question, shows the evidence, and ends with a recommendation and its limits.
+Financial analyst completing a Master of Management Analytics at Queen's University, Smith School of Business. This portfolio collects graduate projects where the goal was a business decision, not a model score. Each project starts from a management question, shows the evidence, and ends with a recommendation and its limits.
 
 The code for every project is included so the results can be checked and re-run.
 
