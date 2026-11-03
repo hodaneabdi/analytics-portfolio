@@ -38,6 +38,14 @@ A drugstore chain has to decide how much stock to hold and how many staff to sch
 
 Daily sales were modelled with a regression that includes a separate baseline for each store, calendar and holiday effects, promotion programmes, competition, and how promotions interact with weekday and store type. 2014 was used to build the model and January to February 2015 to test it. Diagnostics checked whether the model's assumptions held, and robust standard errors were used where they did not. Business hypotheses (for example, "does promotion response differ by weekday?") were tested formally.
 
+## Tools used
+
+- **Language and environment:** Python, Jupyter Notebook
+- **Data handling:** pandas, NumPy
+- **Modelling and testing:** statsmodels (regression with store-level effects, robust standard errors, heteroskedasticity and Wald tests), scikit-learn (accuracy metrics)
+- **Charts:** matplotlib
+- **Dashboard:** standalone HTML and CSS page for executives
+
 ## What is in this folder
 
 | Path | Contents |

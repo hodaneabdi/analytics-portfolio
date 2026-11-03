@@ -41,6 +41,14 @@ A lender receives thousands of loan applications and cannot review each one in d
 
 Six models were compared on 307,511 past applicants (8.07% defaulted) using a 20% test group that no model saw until the final comparison. Models were judged on how well they rank risk, whether their probabilities match reality, how stable they are, and what they would mean for a review team. Differences between models were tested by resampling, not assumed.
 
+## Tools used
+
+- **Language and environment:** Python, Jupyter Notebook
+- **Data handling:** pandas, NumPy
+- **Modelling:** scikit-learn (logistic regression, Ridge, LASSO, decision tree), XGBoost, statsmodels (OLS)
+- **Validation:** hold-out testing, bootstrap resampling, calibration and decile analysis
+- **Charts:** matplotlib, seaborn, Plotly
+
 ## What is in this folder
 
 | Path | Contents |

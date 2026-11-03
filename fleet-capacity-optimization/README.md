@@ -45,6 +45,12 @@ Approve the $30,000 repair budget and bring all 15 trucks back into the dispatch
 
 The problem is set up as a mixed-integer optimization. Every load is assigned either to a specific truck or to the spot market. Every load must be covered, no truck can carry two loads on the same day, and an idle truck can only be used if its repair fee is paid. Two scenarios are compared: the 92 active trucks alone, versus all 107 with repair allowed where it pays off. The model is solved in Python with Pyomo and the open-source HiGHS solver, and each scenario is solved to proven optimality.
 
+## Tools used
+
+- **Language and environment:** Python, Jupyter Notebook
+- **Optimization:** Pyomo (model building), HiGHS (open-source solver), mixed-integer linear programming
+- **Data handling:** pandas, openpyxl, Excel (case workbook and schedule output)
+
 ## What is in this folder
 
 | Path | Contents |

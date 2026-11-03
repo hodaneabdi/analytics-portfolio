@@ -46,6 +46,14 @@ flowchart LR
 - **No native database drivers.** The pipeline uses a pure-Python SQL driver so the cloud function needs no extra installation steps.
 - **Secrets stay out of the code.** Connection details are read from environment settings, and the repository ships only a placeholder settings file.
 
+## Tools used
+
+- **Language:** Python 3.11
+- **Cloud (Azure):** Azure Functions (serverless web endpoint), Azure SQL Database (serverless), Azure Blob Storage (PDF archive), Azure Functions Core Tools for local testing
+- **Data extraction:** pdfplumber and regular expressions
+- **Database:** T-SQL, pymssql; SQLite in the earlier version
+- **External data:** Bank of Canada Valet API (daily USD/CAD rates) via requests
+
 ## What is in this folder
 
 | Path | Purpose |
